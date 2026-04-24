@@ -7,7 +7,7 @@ status: planning
 
 # Minesweeper — Overview
 
-A Minesweeper clone built in Unity 6. Second game from Round To It Studio.
+A Minesweeper clone built in Unity 6.3 LTS. Second game from Round To It Studio.
 
 ---
 
@@ -31,6 +31,6 @@ TBD
 
 ## Stack
 
-- Unity 6 LTS
+- Unity 6.3 LTS (6000.3.x)
 - C# / MonoBehaviour
 - Project: `Round To It Studio/Minesweeper/minesweeper-unity/`
