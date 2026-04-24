@@ -37,16 +37,16 @@ The grid is 9x9. Each cell has one visual state at a time.
 
 **Number colors** — applied via TextMeshPro vertex color:
 
-| Number | Color | Hex |
-|--------|-------|-----|
-| 1 | Blue | #0000FF |
-| 2 | Green | #007B00 |
-| 3 | Red | #FF0000 |
-| 4 | Dark blue | #00007B |
-| 5 | Dark red | #7B0000 |
-| 6 | Teal | #007B7B |
-| 7 | Black | #000000 |
-| 8 | Gray | #7B7B7B |
+| Number | Color     | Hex     |
+| ------ | --------- | ------- |
+| 1      | Blue      | #0000FF |
+| 2      | Green     | #007B00 |
+| 3      | Red       | #FF0000 |
+| 4      | Dark blue | #00007B |
+| 5      | Dark red  | #7B0000 |
+| 6      | Teal      | #007B7B |
+| 7      | Black     | #000000 |
+| 8      | Gray      | #7B7B7B |
 
 ---
 
