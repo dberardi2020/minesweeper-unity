@@ -28,12 +28,14 @@ The grid is 9x9. Each cell has one visual state at a time.
 | State | Trigger | Visual (v1) |
 |-------|---------|-------------|
 | Covered | Default | Mid-gray quad |
-| Flagged | Right-clicked by player | Mid-gray quad + flag character (🚩) |
+| Flagged | Right-clicked by player | Mid-gray quad + `F` |
 | Revealed — empty | Revealed, 0 adjacent mines | Dark-gray quad, no content |
 | Revealed — number | Revealed, 1–8 adjacent mines | Dark-gray quad + colored number (TextMeshPro) |
-| Mine — hit | Player clicked this mine | Red quad + mine character (💣) |
-| Mine — revealed | All other mines shown on loss | Dark-gray quad + mine character (💣) |
-| Mine — wrong flag | Flagged cell that wasn't a mine, shown on loss | Dark-gray quad + flag character with X overlay (🚩✕) |
+| Mine — hit | Player clicked this mine | Red quad + `●` |
+| Mine — revealed | All other mines shown on loss | Dark-gray quad + `●` |
+| Mine — wrong flag | Flagged cell that wasn't a mine, shown on loss | Dark-gray quad + `F✕` |
+
+> Note: TMP's default font does not support color emoji. Emoji (🚩, 💣) would require a TMP Sprite Asset. Plain Unicode symbols are used for v1. Swap in a Sprite Asset post-v1 if desired.
 
 **Number colors** — applied via TextMeshPro vertex color:
 
