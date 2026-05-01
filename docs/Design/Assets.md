@@ -113,13 +113,39 @@ No audio in v1. Out of scope.
 
 ---
 
-## Future Sprite Pass (Post-v1)
+## Sprite Pass (Post-v1)
 
-When replacing v1 primitives with real sprites, each cell state becomes a separate sprite. Recommended spec if/when that happens:
+Full sprite replacement (Option A) — all TMP characters and colored quad primitives are replaced with PNG sprites. See [Art Brief](Art%20Brief.md) for the complete asset list formatted for designer handoff.
 
-- **Format:** PNG, power-of-two dimensions
-- **Cell sprite size:** 16×16 px
-- **Style:** Classic Windows 95 Minesweeper pixel art — raised tile with highlight/shadow bevel for covered state, flat tile for revealed
-- **Source options:** Draw in Aseprite, or source a CC0 sprite sheet from itch.io
+### Layering Approach
 
-This is a drop-in swap — game logic is unaffected.
+Cell sprites use two layers: a **background tile** and an **icon overlay**.
+
+The three background tiles cover distinct cell appearances: covered (raised bevel), revealed (flat), and mine-hit (red flat). All cell content — mine glyph, flag, X, and numbers 1-8 — is handled by icon overlay sprites on a separate layer. This means `icon_mine.png` reuses across both mine-hit and mine-revealed states. The background tiles themselves are content-free.
+
+This avoids a combinatorial explosion of baked-in sprites and keeps the two concerns independent.
+
+### Code Changes
+
+All changes are in the display layer. Game logic (`Board.cs`, `Cell.cs`, `GameState.cs`) is untouched.
+
+**`CellView.cs`**
+- Add serialized sprite fields for each background tile and each icon overlay
+- In `Refresh()`: replace `Background.color = ...` with `Background.sprite = ...`; set the Icon `SpriteRenderer` sprite (or null) per state
+- Remove all TMP `Label` assignments for icons and numbers — the Label component can be dropped from the prefab
+
+**`CellPrefab.prefab`**
+- Add an `Icon` child GameObject with its own `SpriteRenderer` for the overlay layer
+- Remove the existing TMP `Label` child
+
+**`GameManager.cs`** — No changes required.
+
+---
+
+## v2 — Animated Events
+
+Design guidance for adding animation post-v1 sprite pass. Each animation is a sprite sheet — all frames in one PNG, arranged left-to-right in a single row.
+
+Any player-triggered event is a candidate: mine detonation, flag placement, cell reveal, win state. The art decision is which events get motion and which stay static.
+
+See [Art Brief](Art%20Brief.md) for the v2 animation asset table with frame counts, loop behavior, and file specs.
