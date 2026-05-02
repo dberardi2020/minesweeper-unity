@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
         _state = GameState.Ready;
         _cellViews = new CellView[rows, cols];
         BuildGrid();
+        headerView.transform.position = new Vector3((cols - 1) / 2f, 1f, 0f);
         FitCamera();
         headerView.OnResetClick += ResetGame;
         RefreshHeader();
@@ -148,6 +149,8 @@ public class GameManager : MonoBehaviour
         _cellViews = new CellView[rows, cols];
         _timer = 0f;
         BuildGrid();
+        headerView.transform.position = new Vector3((cols - 1) / 2f, 1f, 0f);
+        FitCamera();
         RefreshHeader();
     }
 
