@@ -62,6 +62,8 @@ The header sits above the grid and contains three elements.
 - v1: TextMeshPro with a monospaced font, colored red on dark background to approximate the classic LED display look
 - Font: a free 7-segment / LCD-style TrueType font (see note below)
 
+**Digit sprite spec (post-v1).** 11 sprites: digits 0–9 plus a minus sign. Each is 10px wide × 16px tall, imported at 16 PPU (matching all other sprites). Three digits fill the 32px (2-tile) counter area with 1px padding on each side: `1 + 10 + 10 + 10 + 1 = 32`. Because digits are free-positioned on the content layer (see Wiring — Header Two-Layer Rendering), narrower glyphs such as "1" can be right-aligned within their slot without adjusting the background tiles.
+
 ### Reset Button
 
 - Displays a face icon that reacts to game state
