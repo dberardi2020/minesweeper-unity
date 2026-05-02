@@ -4,6 +4,22 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 ---
 
+## Tile-Based Header (Next Milestone)
+
+**Description:** Replace the TMP-based header with a proper tile-based implementation using artist-delivered assets.
+
+**Notes:** Artist is delivering a 96×16px header background tileset (6 tiles: left endcap, right endcap, counter-L bg, counter-R bg, 2 middle variants — each 16×16px). The header will span the full grid width using tiling middles; counter and timer will use the `DigitDisplay` component (3 SpriteRenderers + `Sprite[10]` array). On larger grids the header scales for free since it's just more tiles. TMP header looks small on Intermediate/Expert grids — acceptable until this ships.
+
+---
+
+## Organize Sprite Assets
+
+**Description:** Restructure `Assets/Sprites/` into subdirectories by type.
+
+**Notes:** All sprites currently sit at one level. Suggested structure: `cells/`, `icons/`, `flowers/`, `digits/`, `header/`. Do this before the header tile assets arrive to avoid a bigger cleanup later.
+
+---
+
 ## Emoji Reactions
 
 **Description:** Progressive face happiness that scales with win percentage.
