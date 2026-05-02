@@ -4,10 +4,12 @@ public class GameManager : MonoBehaviour
 {
     public GameObject cellPrefab;
     public Transform gridParent;
+    public HeaderView headerView;
 
     Board _board;
     GameState _state;
     CellView[,] _cellViews = new CellView[9, 9];
+    float _timer;
 
     void Awake()
     {
@@ -15,6 +17,15 @@ public class GameManager : MonoBehaviour
         _board = new Board();
         _state = GameState.Ready;
         BuildGrid();
+        headerView.OnResetClick += ResetGame;
+        RefreshHeader();
+    }
+
+    void Update()
+    {
+        if (_state != GameState.Playing) return;
+        _timer += Time.deltaTime;
+        headerView.Refresh(_state, 10 - _board.FlagCount, Mathf.FloorToInt(_timer));
     }
 
     // The tile gap is 0.05 world units (1.0 - 0.95 scale), so PPU must be a multiple
@@ -76,6 +87,8 @@ public class GameManager : MonoBehaviour
         {
             RefreshAll(revealAll: false);
         }
+
+        RefreshHeader();
     }
 
     void HandleRightClick(int row, int col)
@@ -83,6 +96,16 @@ public class GameManager : MonoBehaviour
         if (_state != GameState.Playing) return;
         _board.ToggleFlag(row, col);
         _cellViews[row, col].Refresh(_board.Cells[row, col], false);
+        RefreshHeader();
+    }
+
+    void ResetGame()
+    {
+        _board = new Board();
+        _state = GameState.Ready;
+        _timer = 0f;
+        RefreshAll(revealAll: false);
+        RefreshHeader();
     }
 
     void RefreshAll(bool revealAll)
@@ -90,5 +113,10 @@ public class GameManager : MonoBehaviour
         for (int r = 0; r < 9; r++)
             for (int c = 0; c < 9; c++)
                 _cellViews[r, c].Refresh(_board.Cells[r, c], revealAll);
+    }
+
+    void RefreshHeader()
+    {
+        headerView.Refresh(_state, 10 - _board.FlagCount, Mathf.FloorToInt(_timer));
     }
 }

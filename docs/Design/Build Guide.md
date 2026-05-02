@@ -19,8 +19,14 @@ References: [UI Design](UI%20Design.md) · [Logic Design](Logic%20Design.md) · 
 
 ## Phase 1 — Project and Scene Setup
 
-- [x] **[You]** Create Unity 6.3 LTS project: `minesweeper-unity`, 2D template
+- [x] **[You]** Create Unity 6.3 LTS project:
+  1. Open Unity Hub → click **New project**
+  2. Select the **2D (Built-In Render Pipeline)** template
+  3. Set name to `minesweeper-unity`, choose your preferred save location
+  4. Click **Create project**
+
 - [x] **[Claude]** Delete default sample assets
+
 - [x] **[Claude]** Create folder structure under `Assets/`:
   ```
   Assets/
@@ -31,12 +37,35 @@ References: [UI Design](UI%20Design.md) · [Logic Design](Logic%20Design.md) · 
   │   └── Core/        ← pure C# (Board, Cell, GameState)
   └── Sprites/         ← empty for now; populated in sprite pass post-v1
   ```
-- [x] **[You]** Rename default scene to `Game`, save to `Assets/Scenes/`
+
+- [x] **[You]** Rename default scene to `Game`, save to `Assets/Scenes/`:
+  1. In the **Project** window, locate `Assets/Scenes/SampleScene`
+  2. Right-click it → **Rename** → type `Game` → press Enter
+  3. Press **Cmd+S** (Mac) or **Ctrl+S** (Windows) to save
+
 - [x] **[Claude]** Add TextMeshPro to `Packages/manifest.json`
-- [x] **[You]** Import TMP Essentials when Unity prompts
+
+- [x] **[You]** Import TMP Essentials when Unity prompts:
+  1. When the TMP importer window appears, click **Import TMP Essentials**
+  2. Close the window when the import bar completes
+
 - [x] **[Claude]** Download **DSEG7 Classic** font from GitHub (`keshikan/DSEG` releases) and copy into `Assets/Fonts/`
-- [x] **[You]** Set Active Input Handling to **Both**: Edit → Project Settings → Player → Other Settings → Active Input Handling → Both. The 2D template defaults to "New Input System Package Only", which breaks `OnMouseDown`/`OnMouseOver`. Setting to Both lets legacy physics messages work alongside the new system.
-- [x] **[You]** Set camera: Orthographic, Size 5.75, Position (4, -4, -10), Background color `#1A1A1A`
+
+- [x] **[You]** Set Active Input Handling to **Both**:
+  1. Open **Edit → Project Settings → Player**
+  2. Expand the **Other Settings** foldout
+  3. Find **Active Input Handling** — change it from "Input System Package (New)" to **Both**
+  4. Click **Apply** when prompted to restart the Editor
+  > Required for `OnMouseDown` / `OnMouseOver` physics messages to fire alongside the new Input System.
+
+- [x] **[You]** Set up the camera:
+  1. Select **Main Camera** in the Hierarchy
+  2. In the Inspector under **Camera**:
+     - Set **Projection** to `Orthographic`
+     - Set **Size** to `5.75`
+  3. In the Inspector under **Transform**:
+     - Set **Position** to X = `4`, Y = `−4`, Z = `−10`
+  4. Click the **Background** color swatch and enter hex `1A1A1A`
 
 **Checkpoint:** Scene opens, camera shows a dark rectangle. Nothing else yet.
 
@@ -46,23 +75,50 @@ References: [UI Design](UI%20Design.md) · [Logic Design](Logic%20Design.md) · 
 
 Goal: a single cell that can display every visual state.
 
-- [x] **[You]** Create a 1×1 white quad sprite: right-click in `Assets/Sprites` → Create → 2D → Sprites → Square, name it `CellBackground`. In the Inspector, set Sprite Mode to **Single** (not Multiple), then click Apply.
+- [x] **[You]** Create a 1×1 white quad sprite named `CellBackground`:
+  1. In the **Project** window, right-click inside `Assets/Sprites`
+  2. Choose **Create → 2D → Sprites → Square**
+  3. Rename the new asset to `CellBackground`
+  4. Select `CellBackground` in the Project window
+  5. In the Inspector, confirm **Sprite Mode** is set to **Single** — click **Apply**
+
 - [x] **[Claude]** Create `CellView.cs` stub (empty MonoBehaviour, placeholder fields)
-- [x] **[You]** Create `CellPrefab` — hierarchy structure:
-  ```
-  CellPrefab
-  ├── Background   (SpriteRenderer)
-  └── Label        (TextMeshPro)
-  ```
-  - Root `CellPrefab` GameObject: add `BoxCollider2D` (size 1×1), add `CellView` script component
-  - Child `Background`: add `SpriteRenderer`, assign `CellBackground` as the sprite
-  - Child `Label`: add **TextMeshPro - Text** (not the UI variant — in Unity 6 this is the world-space component), set alignment Center/Middle, font size **6**, no overflow. Note: TMP world-space font size is in TMP internal units, not Unity world units — 1 world unit ≈ 9 TMP units, so size 6 fills a 1×1 cell correctly.
-  - Drag the root from the Hierarchy into `Assets/Prefabs/` to create the prefab asset, then delete it from the scene
+
+- [x] **[You]** Build the `CellPrefab` hierarchy:
+  1. In the **Hierarchy**, right-click in empty space → **Create Empty** → rename to `CellPrefab`
+  2. With `CellPrefab` selected, click **Add Component** in the Inspector → search `Box Collider 2D` → add it
+     - Set **Size** to X = `1`, Y = `1`
+  3. Click **Add Component** again → search `Cell View` → add the CellView script
+  4. Right-click `CellPrefab` in the Hierarchy → **Create Empty** → rename the new child to `Background`
+  5. Select `Background`, click **Add Component** → `Sprite Renderer`
+     - Drag `CellBackground` from `Assets/Sprites/` into the **Sprite** field
+  6. Right-click `CellPrefab` in the Hierarchy → **Create Empty** → rename the new child to `Label`
+  7. Select `Label`, click **Add Component** → search `TextMeshPro` → select **TextMeshPro - Text** (the world-space version — *not* the UI variant labelled "(UI)")
+     - Set **Alignment** to Center / Middle
+     - Set **Font Size** to `6`
+     > TMP world-space font size is in TMP units, not Unity units. Size 6 fills a 1×1 cell correctly (1 world unit ≈ 9 TMP units).
+  8. Drag the root `CellPrefab` from the Hierarchy into `Assets/Prefabs/` to create the prefab asset
+  9. Delete `CellPrefab` from the scene (right-click → Delete)
+
 - [x] **[Claude]** Add public `Background` (SpriteRenderer) and `Label` (TextMeshPro) fields to `CellView.cs`
-- [x] **[You]** Wire `Background` and `Label` refs in the prefab inspector
+
+- [x] **[You]** Wire `Background` and `Label` refs inside the prefab:
+  1. In the **Project** window, double-click `Assets/Prefabs/CellPrefab` to open it in prefab isolation mode
+  2. Select the root `CellPrefab` object
+  3. In the Inspector under **Cell View (Script)**:
+     - Drag the `Background` child (from the hierarchy panel on the left) into the **Background** field
+     - Drag the `Label` child into the **Label** field
+  4. Press **Cmd+S** / **Ctrl+S** to save, then click the **←** arrow at the top-left to exit prefab mode
+
 - [x] **[Claude]** Implement `Refresh(Cell cell, bool revealAll)` in `CellView.cs` — all 7 visual states (see Wiring → Cell Refresh Logic)
-- [x] **[Claude]** Create `Cell.cs` data stub in `Assets/Scripts/Core/` — `Refresh` references it and won't compile without it. The full Phase 4 work is on `Board.cs`; `Cell.cs` is just a struct with four fields and can be created here to unblock the Phase 2 test.
-- [x] **[You]** Test: place one CellPrefab in scene, use a test script to call `Refresh` with hardcoded `Cell` values covering all 7 states, verify visuals. Remove test script when done.
+
+- [x] **[Claude]** Create `Cell.cs` data stub in `Assets/Scripts/Core/` — needed so `CellView.cs` compiles. The full Phase 4 definition replaces this.
+
+- [x] **[You]** Test all 7 visual states:
+  1. Drag `Assets/Prefabs/CellPrefab` into the scene
+  2. Create a temporary test script that calls `Refresh` with hardcoded `Cell` values for each of the 7 states (covered, flagged, empty, number, mine-hit, mine-revealed, wrong-flag)
+  3. Enter Play mode and confirm each state renders correctly
+  4. Exit Play mode, delete the test script, delete the cell from the scene
 
 **Checkpoint:** One cell displays all visual states correctly.
 
@@ -72,17 +128,31 @@ Goal: a single cell that can display every visual state.
 
 Goal: 81 cells on screen at the right positions.
 
-- [x] **[You]** Create `GameManager` empty GameObject in scene
+- [x] **[You]** Create the `GameManager` empty GameObject:
+  1. In the Hierarchy, right-click in empty space → **Create Empty**
+  2. Rename it `GameManager`
+  3. Confirm **Transform Position** is (0, 0, 0)
+
 - [x] **[Claude]** Create `GameManager.cs` with:
   - Inspector field: `GameObject cellPrefab`
   - Inspector field: `Transform gridParent` (the `Grid` object)
-  - `CellView[9,9] cellViews` array (private)
-  - `BuildGrid()` method: instantiates 81 cells, sets `Row`/`Col` and scale (`0.95×0.95`) on each, calls `Refresh(new Cell(), false)`, stores in array, positions at `x = col`, `y = -row`
-  - Call `BuildGrid()` in `Awake`
-  - Note: cells scaled to 0.95×0.95 so the dark camera background shows through as grid lines
-- [x] **[You]** Add `GameManager.cs` script component to the GameObject
-- [x] **[You]** Create empty `Grid` GameObject; assign to `GameManager.gridParent` in inspector
-- [x] **[You]** Assign `cellPrefab` in inspector
+  - `CellView[9,9] cellViews` private array
+  - `BuildGrid()`: instantiates 81 cells, assigns `Row`/`Col`, scales each to `0.95×0.95` (so the dark background shows through as grid lines), calls `Refresh(new Cell(), false)`, positions at `x = col`, `y = -row`
+  - Calls `BuildGrid()` in `Awake`
+
+- [x] **[You]** Add the `GameManager` script component:
+  1. Select `GameManager` in the Hierarchy
+  2. Click **Add Component** → search `Game Manager` → add it
+
+- [x] **[You]** Create the `Grid` parent object and assign it:
+  1. In the Hierarchy, right-click in empty space → **Create Empty** → rename to `Grid`
+  2. Confirm **Transform Position** is (0, 0, 0)
+  3. Select `GameManager` in the Hierarchy
+  4. In the Inspector under **Game Manager (Script)**, drag `Grid` from the Hierarchy into the **Grid Parent** field
+
+- [x] **[You]** Assign `CellPrefab` in the inspector:
+  1. Select `GameManager` in the Hierarchy
+  2. Drag `Assets/Prefabs/CellPrefab` from the Project window into the **Cell Prefab** field
 
 **Checkpoint:** 81 covered cells fill the screen in a 9×9 grid.
 
@@ -103,7 +173,7 @@ Goal: the full game model written and verified independent of Unity.
   - [x] `CheckWin()`: returns true if unrevealed count equals mine count
   - [x] `FlagCount` property: count of flagged cells
 
-**No Unity testing needed here — the logic is pure C#. Trace through each algorithm on paper or in your head using the Logic Design doc as the reference.**
+**No Unity testing needed here — the logic is pure C#. Trace through each algorithm against the Logic Design doc.**
 
 **Checkpoint:** Board.cs compiles with no errors. All methods match the Logic Design spec.
 
@@ -113,9 +183,12 @@ Goal: the full game model written and verified independent of Unity.
 
 Goal: clicking cells triggers real game logic and updates the display.
 
-- [x] **[You]** Set Active Input Handling to **Both**: Edit → Project Settings → Player → Other Settings → Active Input Handling → Both. Restart when prompted. Required for `OnMouseDown`/`OnMouseOver` physics messages to fire alongside the new Input System.
+- [x] **[You]** Confirm Active Input Handling is set to **Both** — done in Phase 1; no action needed
+
 - [x] **[Claude]** Add `Action<int,int> OnLeftClick` and `Action<int,int> OnRightClick` events to `CellView`
+
 - [x] **[Claude]** Implement input in `CellView`: `OnMouseDown` raises `OnLeftClick`; `OnMouseOver` + `Mouse.current.rightButton.wasPressedThisFrame` raises `OnRightClick`
+
 - [x] **[Claude]** Expand `GameManager.cs`:
   - [x] Create `Board` in `Awake` (or `ResetGame`)
   - [x] Add `GameState _state` field
@@ -131,7 +204,7 @@ Goal: clicking cells triggers real game logic and updates the display.
     - Call `Board.ToggleFlag(row, col)`, refresh that cell
   - [x] `RefreshAll(bool revealAll)`: loop over all cells, call `cellViews[r,c].Refresh(board[r,c], revealAll)`
 
-**Checkpoint:** Clicking cells reveals them. Flood fill opens empty regions. Right-click flags cells. Clicking a mine reveals all mines. Uncovering the board triggers the win state (verify by placing a breakpoint or Debug.Log).
+**Checkpoint:** Clicking cells reveals them. Flood fill opens empty regions. Right-click flags cells. Clicking a mine reveals all mines. Uncovering the board triggers the win state (verify by adding a `Debug.Log` in the win branch).
 
 ---
 
@@ -139,36 +212,149 @@ Goal: clicking cells triggers real game logic and updates the display.
 
 Goal: mine counter, timer, and reset button are live.
 
-- [ ] **[You]** Create `Header` GameObject above the grid (y ≈ 1.25)
-- [ ] **[You]** Add child objects: `Panel` (SpriteRenderer quad), `MineCounter` (TMP), `Timer` (TMP), `ResetButton` (SpriteRenderer + TMP + BoxCollider2D)
-- [ ] **[Claude]** Create `HeaderView.cs`:
-  - Inspector refs to all four child objects
-  - `Action OnResetClick` event
-  - `Refresh(GameState state, int minesRemaining, int seconds)`: updates counter (zero-padded 3-digit), timer (zero-padded, capped at 999), and button face emoji
-  - `OnMouseDown` on reset button raises `OnResetClick`
-- [ ] **[You]** Add `HeaderView.cs` component to `Header` GameObject; wire all inspector refs
-- [ ] **[You]** Set `MineCounter` and `Timer` to DSEG7 font, red text on dark panel
-- [ ] **[Claude]** Expand `GameManager.cs`:
-  - Inspector ref to `HeaderView`
-  - Subscribe to `HeaderView.OnResetClick`
-  - `ResetGame()`: new Board, reset state to Ready, timer to 0, rebuild or refresh all cells, refresh header
-  - Call `HeaderView.Refresh(...)` after every state change
-  - Timer: in `Update`, if state is `Playing`, increment `_timer` by `Time.deltaTime`, call `HeaderView.Refresh` each second
-- [ ] **[You]** Assign `HeaderView` ref in `GameManager` inspector
+### Scene hierarchy
 
-**Checkpoint:** Mine counter decrements on flag. Timer counts up from first click and stops on win/loss. Reset button restarts the game. Face emoji changes with game state.
+```
+Header                    ← empty GameObject at (4, 1.25, 0); has HeaderView script
+├── Panel                 ← SpriteRenderer, CellBackground sprite, dark tint, scale (9,1,1), order 0
+├── MineCounter           ← TextMeshPro, local pos (-2.5, 0, 0), DSEG7 font, red, order 1
+├── Timer                 ← TextMeshPro, local pos (2.5, 0, 0), DSEG7 font, red, order 1
+└── ResetButton           ← empty root; BoxCollider2D (1×1) + Clickable script
+    ├── Background        ← SpriteRenderer, CellBackground sprite, grey tint, scale (0.95, 0.95, 1), order 0
+    └── Label             ← TextMeshPro, face emoji, font size 5, Center/Middle, order 1
+```
+
+> **Note:** SpriteRenderer and TMP cannot share a GameObject (MeshRenderer conflict). ResetButton must be split into a root + two children, same pattern as CellPrefab.
+
+### Steps
+
+- [x] **[You]** Create `Header` empty GameObject:
+  1. Right-click in the Hierarchy → **Create Empty** → rename to `Header`
+  2. Set **Transform Position** to X = `4`, Y = `1.25`, Z = `0`
+
+- [x] **[You]** Add `Panel` child:
+  1. Right-click `Header` in the Hierarchy → **Create Empty** → rename to `Panel`
+  2. Select `Panel`, click **Add Component** → **Sprite Renderer**
+  3. Drag `CellBackground` into the **Sprite** field
+  4. Click the **Color** swatch → enter hex `2A2A2A`
+  5. Set **Transform Scale** to X = `9`, Y = `1`, Z = `1`
+  6. In the Sprite Renderer component, set **Sorting Order** to `0`
+
+- [x] **[You]** Add `MineCounter` child:
+  1. Right-click `Header` → **Create Empty** → rename to `MineCounter`
+  2. Select `MineCounter`, click **Add Component** → search `TextMeshPro` → select **TextMeshPro - Text** (world-space, not UI)
+  3. Set the text content to `010`
+  4. Set **Transform Local Position** to X = `−2.5`, Y = `0`, Z = `0`
+  5. Scroll to **Extra Settings** in the TMP component → set **Sorting Order** to `1`
+
+- [x] **[You]** Add `Timer` child:
+  1. Right-click `Header` → **Create Empty** → rename to `Timer`
+  2. Select `Timer`, click **Add Component** → **TextMeshPro - Text** (world-space)
+  3. Set text to `000`
+  4. Set **Transform Local Position** to X = `2.5`, Y = `0`, Z = `0`
+  5. In **Extra Settings**, set **Sorting Order** to `1`
+
+- [x] **[You]** Add `ResetButton` child:
+  1. Right-click `Header` → **Create Empty** → rename to `ResetButton`
+  2. Select `ResetButton`, click **Add Component** → **Box Collider 2D** → set Size to X = `1`, Y = `1`
+     > The collider must be on `ResetButton` itself — not on `Background` or `Label`. `OnMouseDown` only fires when the collider and the script are on the same GameObject.
+  3. Click **Add Component** → search `Clickable` → add the Clickable script
+  4. Leave **Transform Local Position** at (0, 0, 0)
+
+- [x] **[You]** Add `Background` child under `ResetButton`:
+  1. Right-click `ResetButton` → **Create Empty** → rename to `Background`
+  2. Select `Background`, click **Add Component** → **Sprite Renderer**
+  3. Drag `CellBackground` into the **Sprite** field
+  4. Click the **Color** swatch → enter hex `555555`
+  5. Set **Transform Scale** to X = `0.95`, Y = `0.95`, Z = `1`
+  6. Set **Sorting Order** to `0`
+
+- [x] **[You]** Add `Label` child under `ResetButton`:
+  1. Right-click `ResetButton` → **Create Empty** → rename to `Label`
+  2. Select `Label`, click **Add Component** → **TextMeshPro - Text** (world-space)
+  3. Set text to `🙂` (placeholder — HeaderView.cs replaces this with a sprite tag at runtime)
+  4. Set **Font Size** to `5`
+  5. Set **Alignment** to Center / Middle
+  6. In **Extra Settings**, set **Sorting Order** to `1`
+
+- [x] **[Claude]** Create `Clickable.cs` — `OnMouseDown` raises `Action OnClick`
+- [x] **[Claude]** Create `HeaderView.cs` — manages counter, timer, and face; `Refresh(GameState, int, int)`; subscribes to `ResetButton.OnClick`
+- [x] **[Claude]** Expand `GameManager.cs` — adds `HeaderView` ref, timer in `Update`, `ResetGame()`, `RefreshHeader()` calls after every state change
+
+- [x] **[You]** Convert DSEG7 font to a TMP Font Asset:
+  1. Open **Window → TextMeshPro → Font Asset Creator**
+  2. In the **Source Font File** field, click the circle icon → select `DSEG7Classic-Regular.ttf` from `Assets/Fonts/`
+  3. Leave all other settings at their defaults (SDF mode, Atlas Resolution 512×512)
+  4. Click **Generate Font Atlas** — wait for the progress bar to finish
+  5. Click **Save** → save the asset into `Assets/Fonts/` as `DSEG7Classic-Regular SDF`
+  6. Dismiss any "missing characters" warnings — DSEG7 only contains digits and basic punctuation, so missing letters are expected
+
+- [x] **[You]** Apply DSEG7 font and red color to `MineCounter` and `Timer`:
+  1. Select `MineCounter` in the Hierarchy
+  2. In the Inspector under **TextMeshPro**, click the **Font Asset** circle icon → select `DSEG7Classic-Regular SDF`
+  3. Click the **Color** swatch → enter hex `FF0000`
+  4. Select `Timer` in the Hierarchy and repeat steps 2–3
+
+- [x] **[You]** Set the Sprite Asset on `Label` (enables emoji rendering):
+  1. Select `Label` (child of `ResetButton`) in the Hierarchy
+  2. In the Inspector under **TextMeshPro**, scroll to **Extra Settings**
+  3. Click the **Sprite Asset** circle icon → select `EmojiOne` from `Assets/TextMesh Pro/Resources/Sprite Assets/`
+
+- [x] **[You]** Add `HeaderView` script to the `Header` GameObject:
+  1. Select `Header` in the Hierarchy
+  2. Click **Add Component** → search `Header View` → add it
+
+- [x] **[You]** Wire `HeaderView` inspector refs:
+  1. Select `Header` in the Hierarchy
+  2. In the Inspector under **Header View (Script)**:
+     - **Mine Counter** → drag the `MineCounter` GameObject here (Unity extracts its TMP component automatically)
+     - **Reset Label** → drag the `Label` GameObject (child of `ResetButton`) here
+     - **Timer** → drag the `Timer` GameObject here
+     - **Reset Button** → drag the `ResetButton` GameObject here (Unity extracts its Clickable component)
+
+- [x] **[You]** Wire the `GameManager` header ref:
+  1. Select `GameManager` in the Hierarchy
+  2. In the Inspector under **Game Manager (Script)**, drag the `Header` GameObject into the **Header View** field (Unity extracts its HeaderView component)
+
+> **Emoji note:** The TMP EmojiOne atlas only ships with 16 faces. `HeaderView.cs` uses TMP sprite tags (`<sprite name="263a">` etc.) instead of raw emoji characters. The faces used are ☺/😅/😎/☹ as substitutes for the original spec's 🙂/😮/😎/😵. Swap them out during the art pass.
+
+**Checkpoint:** Mine counter shows `010`, timer shows `000`, face shows ☺. First click starts timer. Flagging decrements counter. Win → 😎, lose → ☹. Reset button restarts everything.
 
 ---
 
 ## Phase 7 — Final Pass
 
-- [ ] **[You]** Verify all 7 cell visual states appear correctly in a real game session
-- [ ] **[You]** Verify mine counter can go negative when over-flagged
-- [ ] **[You]** Verify timer caps display at 999
-- [ ] **[You]** Verify first click is always safe (play 10+ times, never lose on first click)
-- [ ] **[You]** Verify flood fill never reveals mines or flagged cells
-- [ ] **[You]** Verify win is detected correctly — try a game where you methodically uncover every safe cell
-- [ ] **[You]** Verify wrong-flag state shows on loss for flagged non-mine cells
+- [ ] **[You]** Verify all 7 cell visual states:
+  - **Covered** — on a fresh game, all cells show the grey covered tile
+  - **Flagged** — right-click any covered cell; it shows a flag marker
+  - **Revealed empty** — left-click a cell with no adjacent mines; surrounding cells cascade open showing flat, blank tiles
+  - **Revealed number** — cells bordering a mine region display 1–8 in the correct colors (1=blue, 2=green, 3=red, etc.)
+  - **Mine hit** — left-click a mine; that cell shows a red background with a mine icon
+  - **Mine revealed** — all other mines appear on loss with a non-red background and mine icon
+  - **Wrong flag** — flag a safe cell before losing; on loss that cell shows a crossed-out flag
+
+- [ ] **[You]** Verify mine counter goes negative when over-flagged:
+  - Place more than 10 flags in one game; confirm the counter shows `−1`, `−2`, etc.
+
+- [ ] **[You]** Verify timer display caps at 999:
+  - Temporarily change the cap in `HeaderView.cs` (`Mathf.Min(seconds, 999)`) to a small number like `5`, enter Play mode, let the timer reach 6, confirm the display holds at `005`, then revert the change
+
+- [ ] **[You]** Verify first click is always safe:
+  - Play 10+ games and always click the same cell first — you should never lose on the first click
+
+- [ ] **[You]** Verify flood fill behavior:
+  - Click a cell with 0 adjacent mines and watch a region open automatically
+  - Confirm no mines are uncovered by the flood fill
+  - Confirm a flagged cell adjacent to an empty region is not auto-revealed
+
+- [ ] **[You]** Verify win detection:
+  - Play a full game to completion by uncovering every non-mine cell
+  - Confirm the win state triggers and the timer stops
+
+- [ ] **[You]** Verify wrong-flag display on loss:
+  - Flag at least one cell you know is not a mine (observe positions via `Debug.Log` in `PlaceMines` if needed)
+  - Click a mine to trigger loss — the incorrectly flagged cell should show the crossed-flag state
+
 - [ ] **[You]** Read through all five design docs. Confirm every decision documented in them is reflected in the built game.
 
 **Checkpoint:** All verification items pass. Docs reviewed. Ship.
