@@ -11,9 +11,21 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        SnapCameraToPixelGrid();
         _board = new Board();
         _state = GameState.Ready;
         BuildGrid();
+    }
+
+    // The tile gap is 0.05 world units (1.0 - 0.95 scale), so PPU must be a multiple
+    // of 20 for the gap to be a whole number of pixels. cam.pixelHeight gives the
+    // physical render target height, which is correct on Retina/HiDPI displays.
+    void SnapCameraToPixelGrid()
+    {
+        var cam = Camera.main;
+        float rawPpu = cam.pixelHeight / (cam.orthographicSize * 2f);
+        float snappedPpu = Mathf.Round(rawPpu / 20f) * 20f;
+        if (snappedPpu > 0) cam.orthographicSize = cam.pixelHeight / (snappedPpu * 2f);
     }
 
     void BuildGrid()
