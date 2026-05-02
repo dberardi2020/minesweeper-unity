@@ -150,14 +150,14 @@ public class HeaderView : MonoBehaviour
     }
 
     // v1: progress = revealed safe cells / total safe cells (0–1).
-    // Won → Rainbow, Lost → Storm, otherwise ramps DarkCloud → Rain → LightCloud → Sun.
+    // Won → Rainbow, Lost → Storm, otherwise Rain → DarkCloud → LightCloud → Sun.
     Sprite WeatherForProgress(GameState state, float progress)
     {
         if (state == GameState.Lost) return WeatherStorm;
         if (state == GameState.Won)  return WeatherRainbow;
         if (progress >= 0.75f)       return WeatherSun;
         if (progress >= 0.50f)       return WeatherLightCloud;
-        if (progress >= 0.25f)       return WeatherRain;
-        return WeatherDarkCloud;
+        if (progress >= 0.25f)       return WeatherDarkCloud;
+        return WeatherRain;
     }
 }
