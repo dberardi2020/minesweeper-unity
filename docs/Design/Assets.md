@@ -2,7 +2,7 @@
 title: Minesweeper — Assets
 date: 2026-04-24
 type: design
-status: planning
+status: active
 ---
 
 # Minesweeper — Assets
@@ -13,11 +13,9 @@ Every asset required to build the game. For each: what it is, its spec, and how 
 
 ## Creation Strategy
 
-**v1 uses Unity primitives + TextMeshPro. No external art files.**
+Cells use PNG sprites for backgrounds and icon overlays; sprite refs are set in the Inspector on the `CellView` prefab. Numbers 1–3 use icon sprites; 4–8 fall back to colored TextMeshPro text. The header is still TMP-based — tile-based header with digit sprites is the next milestone (see Backlog).
 
-Cells are colored quads. Numbers are TextMeshPro text. Icons (flag, mine, face) are TextMeshPro Unicode characters styled to fit. This keeps the focus on Unity mechanics rather than art pipeline, and allows the full game to be built and tested before any sprites exist.
-
-Sprites can be swapped in later without changing any game logic, since visual representation is isolated in the display layer (see Wiring).
+All game logic (`Board.cs`, `Cell.cs`) is sprite-agnostic; swapping visuals requires only `CellView.cs` and the prefab.
 
 ---
 
@@ -85,16 +83,16 @@ The header sits above the grid and contains three elements.
 
 ## Layout and Sizing
 
-No fixed pixel sizes in v1 — the scene is sized in Unity units and scaled to fill the camera view.
+Scene is sized in Unity units; `FitCamera()` recalculates orthographic size on every reset.
 
 | Element | Size (Unity units) |
 |---------|--------------------|
 | Cell | 1 × 1 |
-| Grid | 9 × 9 |
-| Header height | ~2 units |
-| Total scene | ~9 × 11 |
+| Grid | cols × rows (difficulty-dependent) |
+| Header height | ~1.5 units |
+| Total scene height | rows + 1.5 + padding |
 
-Camera is set to orthographic with size calculated to frame the full scene with minimal padding.
+Difficulties: Beginner 9×9, Intermediate 16×16, Expert 30×16.
 
 ---
 

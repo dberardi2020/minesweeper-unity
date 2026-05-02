@@ -25,14 +25,8 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         ApplyDifficulty();
-        _board = new Board(_rows, _cols, _mineCount);
-        _state = GameState.Ready;
-        _cellViews = new CellView[_rows, _cols];
-        BuildGrid();
-        headerView.transform.position = new Vector3((_cols - 1) / 2f, 1f, 0f);
-        FitCamera();
         headerView.OnResetClick += ResetGame;
-        RefreshHeader();
+        InitGame();
     }
 
     void Update()
@@ -50,7 +44,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject go = Instantiate(cellPrefab, gridParent);
                 go.transform.localPosition = new Vector3(col, -row, 0);
-                go.transform.localScale = new Vector3(0.95f, 0.95f, 1f);
+                go.transform.localScale = Vector3.one;
 
                 CellView cv = go.GetComponent<CellView>();
                 cv.Row = row;
@@ -63,12 +57,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Centers the camera on the grid + header and sizes it to fit.
-    // The tile gap is 0.05 world units (1.0 - 0.95 scale), so PPU must be a multiple
-    // of 20 for the gap to be a whole number of pixels.
     void FitCamera()
     {
-        float gridWidth  = _cols;
         float gridHeight = _rows + 1.5f; // +1.5 for header
 
         var cam = Camera.main;
@@ -78,12 +68,7 @@ public class GameManager : MonoBehaviour
             -10f
         );
 
-        float rawSize = gridHeight / 2f + 0.5f;
-        float rawPpu  = cam.pixelHeight / (rawSize * 2f);
-        float snappedPpu = Mathf.Round(rawPpu / 20f) * 20f;
-        cam.orthographicSize = snappedPpu > 0
-            ? cam.pixelHeight / (snappedPpu * 2f)
-            : rawSize;
+        cam.orthographicSize = gridHeight / 2f + 0.5f;
     }
 
     void HandleLeftClick(int row, int col)
@@ -140,11 +125,13 @@ public class GameManager : MonoBehaviour
     void ResetGame()
     {
         if (_bloom != null) { StopCoroutine(_bloom); _bloom = null; }
-
-        // Destroy existing cell GameObjects before rebuilding
         foreach (Transform child in gridParent)
             Destroy(child.gameObject);
+        InitGame();
+    }
 
+    void InitGame()
+    {
         _board = new Board(_rows, _cols, _mineCount);
         _state = GameState.Ready;
         _cellViews = new CellView[_rows, _cols];

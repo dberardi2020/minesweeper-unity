@@ -12,14 +12,6 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 ---
 
-## Organize Sprite Assets
-
-**Description:** Restructure `Assets/Sprites/` into subdirectories by type.
-
-**Notes:** All sprites currently sit at one level. Suggested structure: `cells/`, `icons/`, `flowers/`, `digits/`, `header/`. Do this before the header tile assets arrive to avoid a bigger cleanup later.
-
----
-
 ## Emoji Reactions
 
 **Description:** Progressive face happiness that scales with win percentage.

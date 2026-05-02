@@ -2,7 +2,7 @@
 title: Minesweeper
 date: 2026-04-24
 type: overview
-status: planning
+status: active
 ---
 
 # Minesweeper — Overview
@@ -31,23 +31,25 @@ Classic Minesweeper: a grid of covered cells, some hiding mines. Left-click to r
 
 ## Scope
 
-### v1 — In Scope
-- Fixed beginner grid: 9x9, 10 mines
+### Shipped
+- Three difficulty presets: Beginner (9×9, 10 mines), Intermediate (16×16, 40 mines), Expert (30×16, 99 mines)
 - Left-click to reveal a cell
 - Right-click to flag / unflag a cell
 - Flood fill: revealing an empty cell (0 adjacent mines) recursively reveals its neighbors
 - First click is always safe — mines are placed after the first click
-- Number display on revealed cells (1–8)
+- Number display on revealed cells (1–8) using sprite icons (1–3) and colored TMP text (4–8)
 - Win condition: all non-mine cells revealed
 - Lose condition: clicking a mine — all mines revealed
-- Header UI: mine counter, reset button, timer
+- Header UI: mine counter, reset button (face emoji), timer — TMP-based, tile-based header pending
+- Bloom animation on flood fill reveal (flowers appear in a wave)
+- Sprite-based cell tiles (covered, revealed variants, mine-hit, flowers, flags)
+- Runtime difficulty selector (3 buttons, screen-space overlay)
 
-### Out of Scope (v1)
-- Difficulty selection (beginner / intermediate / expert)
+### Out of Scope (current)
 - Custom grid size
 - Sound and music
-- Animations or visual polish
 - Persistent high scores
+- Tile-based header (backlog — awaiting artist assets)
 
 ---
 
