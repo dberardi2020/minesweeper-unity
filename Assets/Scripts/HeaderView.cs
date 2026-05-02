@@ -12,7 +12,13 @@ public class HeaderView : MonoBehaviour
     public Clickable ResetButton;
 
     [Header("Sprite Header")]
+    public Sprite HeaderCapLeft;
+    public Sprite HeaderCapRight;
     public Sprite HeaderMiddle;
+    public Sprite HeaderMiddle2;
+    public Sprite HeaderCounterLeft;
+    public Sprite HeaderCounterCenter;
+    public Sprite HeaderCounterRight;
     public Sprite[] DigitSprites; // 11 sprites: indices 0-9 = digits, 10 = minus
 
     public Action OnResetClick;
@@ -59,23 +65,37 @@ public class HeaderView : MonoBehaviour
             tile.transform.SetParent(_bgContainer.transform, false);
             tile.transform.localPosition = new Vector3(c - halfSpan, 0f, 0f);
             var sr = tile.AddComponent<SpriteRenderer>();
-            sr.sprite = HeaderMiddle;
+            sr.sprite = TileSprite(c, cols);
             sr.sortingOrder = 0;
         }
 
-        // Mine counter — left side (will shift right by 1 tile when endcap arrives)
+        // Layout: [cap_L][ctr_L][ctr_C][ctr_R][middle×(cols-8)][ctr_L][ctr_C][ctr_R][cap_R]
+        // Mine display parent at col 1, timer parent at col cols-4
         var mineGo = new GameObject("MineDisplay");
         mineGo.transform.SetParent(transform, false);
-        mineGo.transform.localPosition = new Vector3(-halfSpan, 0f, 0f);
+        mineGo.transform.localPosition = new Vector3((3 - cols) / 2f, 0f, 0f);
         _mineDisplay = mineGo.AddComponent<DigitDisplay>();
         _mineDisplay.Sprites = DigitSprites;
 
-        // Timer — right side (will shift left by 1 tile when endcap arrives)
         var timerGo = new GameObject("TimerDisplay");
         timerGo.transform.SetParent(transform, false);
-        timerGo.transform.localPosition = new Vector3((cols - 3) / 2f, 0f, 0f);
+        timerGo.transform.localPosition = new Vector3((cols - 7) / 2f, 0f, 0f);
         _timerDisplay = timerGo.AddComponent<DigitDisplay>();
         _timerDisplay.Sprites = DigitSprites;
+    }
+
+    Sprite TileSprite(int c, int cols)
+    {
+        int r = cols - 1 - c;
+        if (c == 0) return HeaderCapLeft;
+        if (r == 0) return HeaderCapRight;
+        if (c == 1) return HeaderCounterLeft;
+        if (c == 2) return HeaderCounterCenter;
+        if (c == 3) return HeaderCounterRight;
+        if (r == 3) return HeaderCounterLeft;
+        if (r == 2) return HeaderCounterCenter;
+        if (r == 1) return HeaderCounterRight;
+        return c % 2 == 0 ? HeaderMiddle : HeaderMiddle2;
     }
 
     public void Refresh(GameState state, int minesRemaining, int seconds)
