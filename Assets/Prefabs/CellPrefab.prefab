@@ -91,6 +91,97 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &3221287365635586728
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6407300337588704454}
+  - component: {fileID: 7581487464446395895}
+  m_Layer: 0
+  m_Name: Icon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6407300337588704454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3221287365635586728}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3630415550824288059}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &7581487464446395895
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3221287365635586728}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 2
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 1, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &4088379630769774137
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +396,7 @@ Transform:
   m_Children:
   - {fileID: 4288662411579012607}
   - {fileID: 7768032848949517525}
+  - {fileID: 6407300337588704454}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &3881321593955002489
@@ -368,4 +460,20 @@ MonoBehaviour:
   Row: 0
   Col: 0
   Background: {fileID: 3883803774430335405}
+  Icon: {fileID: 7581487464446395895}
   Label: {fileID: 6793861538494304058}
+  SpriteCovered: {fileID: -7450498365364002761, guid: 4a0743bb195cd43beb0f8afb3e7ef588, type: 3}
+  SpriteRevealed1: {fileID: -5163828598533379175, guid: f6a8c6c92bdcf41c2988ffe7fd74860b, type: 3}
+  SpriteRevealed2: {fileID: 5822030026922396054, guid: 4a85bb365d65440438577a9b8f04c1cd, type: 3}
+  SpriteRevealed3: {fileID: -4718178546796562956, guid: f22978c3f566542b69b4c0c0e323679a, type: 3}
+  SpriteMineHit: {fileID: 8139347485950991591, guid: 8ae8e16d155a940f39a36eac3b61e4f4, type: 3}
+  SpriteFlag: {fileID: -3059288433473140158, guid: f485b5843bce84cd88067309d4ccc2ce, type: 3}
+  SpriteRabbit: {fileID: 5035835132695561974, guid: ca342408b67404fcd92c3d29229c2904, type: 3}
+  SpriteNumber1: {fileID: 4419486208207679604, guid: 92fd4b47ca1e34d589a0518d8f15cc6f, type: 3}
+  SpriteNumber2: {fileID: 5474679738958099278, guid: 581a4219d94f44bbea57eb8380530251, type: 3}
+  SpriteNumber3: {fileID: 2142464593348499656, guid: a8a9b0ab7bee048d092327e70f05065a, type: 3}
+  SpriteFlowers:
+  - {fileID: -8503935516423094657, guid: 6b2eac786faf84c3495f358ae5020761, type: 3}
+  - {fileID: -1753048962711263045, guid: c15fc8f3a37df455baa9407db91c7265, type: 3}
+  - {fileID: -5587622106815770155, guid: 0330571de2e04424692c2858c07b6d5c, type: 3}
+  - {fileID: -6281189211855047916, guid: 2e2fb3e68b05245f3b5e0e5bd50fc9ef, type: 3}

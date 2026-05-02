@@ -27,11 +27,11 @@ Classic Windows 95 Minesweeper pixel art.
 
 Three background tiles only — no icons drawn on these. All icon content layers on top separately.
 
-| File | Dimensions | Description |
-|------|------------|-------------|
-| `cell_covered.png` | 16×16 | Raised bevel tile — mid-gray body, white/light top and left edges, dark bottom and right edges, 1 px |
-| `cell_revealed.png` | 16×16 | Flat tile — slightly darker gray fill, thin dark border, no bevel |
-| `cell_mine_hit.png` | 16×16 | Same shape as revealed but red (#FF0000) fill — mine icon layers on top |
+| File                | Dimensions | Description                                                                                          |
+| ------------------- | ---------- | ---------------------------------------------------------------------------------------------------- |
+| `cell_covered.png`  | 16×16      | Raised bevel tile — mid-gray body, white/light top and left edges, dark bottom and right edges, 1 px |
+| `cell_revealed.png` | 16×16      | Flat tile — slightly darker gray fill, thin dark border, no bevel                                    |
+| `cell_mine_hit.png` | 16×16      | Same shape as revealed but red (#FF0000) fill — mine icon layers on top                              |
 
 ---
 
@@ -39,19 +39,19 @@ Three background tiles only — no icons drawn on these. All icon content layers
 
 Layered on top of cell backgrounds. Transparent backgrounds. Centered on the 16×16 cell.
 
-| File | Dimensions | Description |
-|------|------------|-------------|
-| `icon_mine.png` | 12×12 | Black circle body with 8 spikes radiating outward, small white highlight spot top-left |
-| `icon_flag.png` | 12×12 | Red triangular flag on a black pole, small black base at bottom |
-| `icon_x.png` | 10×10 | Red X, 2 px diagonal strokes — overlaid on wrong-flag cells alongside `icon_flag.png` |
-| `icon_number_1.png` | 8×12 | Digit "1" in blue (#0000FF) |
-| `icon_number_2.png` | 8×12 | Digit "2" in green (#007B00) |
-| `icon_number_3.png` | 8×12 | Digit "3" in red (#FF0000) |
-| `icon_number_4.png` | 8×12 | Digit "4" in dark blue (#00007B) |
-| `icon_number_5.png` | 8×12 | Digit "5" in dark red (#7B0000) |
-| `icon_number_6.png` | 8×12 | Digit "6" in teal (#007B7B) |
-| `icon_number_7.png` | 8×12 | Digit "7" in black (#000000) |
-| `icon_number_8.png` | 8×12 | Digit "8" in gray (#7B7B7B) |
+| File                | Dimensions | Description                                                                            |
+| ------------------- | ---------- | -------------------------------------------------------------------------------------- |
+| `icon_mine.png`     | 12×12      | Black circle body with 8 spikes radiating outward, small white highlight spot top-left |
+| `icon_flag.png`     | 12×12      | Red triangular flag on a black pole, small black base at bottom                        |
+| `icon_x.png`        | 10×10      | Red X, 2 px diagonal strokes — overlaid on wrong-flag cells alongside `icon_flag.png`  |
+| `icon_number_1.png` | 8×12       | Digit "1" in blue (#0000FF)                                                            |
+| `icon_number_2.png` | 8×12       | Digit "2" in green (#007B00)                                                           |
+| `icon_number_3.png` | 8×12       | Digit "3" in red (#FF0000)                                                             |
+| `icon_number_4.png` | 8×12       | Digit "4" in dark blue (#00007B)                                                       |
+| `icon_number_5.png` | 8×12       | Digit "5" in dark red (#7B0000)                                                        |
+| `icon_number_6.png` | 8×12       | Digit "6" in teal (#007B7B)                                                            |
+| `icon_number_7.png` | 8×12       | Digit "7" in black (#000000)                                                           |
+| `icon_number_8.png` | 8×12       | Digit "8" in gray (#7B7B7B)                                                            |
 
 ---
 

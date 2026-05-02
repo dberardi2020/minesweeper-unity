@@ -8,15 +8,30 @@ public class CellView : MonoBehaviour
     public int Row;
     public int Col;
 
+    [Header("Child References")]
     public SpriteRenderer Background;
+    public SpriteRenderer Icon;
     public TextMeshPro Label;
+
+    [Header("Background Sprites")]
+    public Sprite SpriteCovered;
+    public Sprite SpriteRevealed1;
+    public Sprite SpriteRevealed2;
+    public Sprite SpriteRevealed3;
+    public Sprite SpriteMineHit;
+
+    [Header("Icon Sprites")]
+    public Sprite SpriteFlag;
+    public Sprite SpriteRabbit;
+    public Sprite SpriteNumber1;
+    public Sprite SpriteNumber2;
+    public Sprite SpriteNumber3;
+
+    [Header("Flower Sprites")]
+    public Sprite[] SpriteFlowers;
 
     public Action<int, int> OnLeftClick;
     public Action<int, int> OnRightClick;
-
-    static readonly Color ColorCovered  = new Color32(170, 170, 170, 255);
-    static readonly Color ColorRevealed = new Color32( 85,  85,  85, 255);
-    static readonly Color ColorMineHit  = new Color32(255,   0,   0, 255);
 
     static readonly Color[] NumberColors =
     {
@@ -33,13 +48,11 @@ public class CellView : MonoBehaviour
 
     void Awake()
     {
-        Label.GetComponent<Renderer>().sortingOrder = 1;
+        Icon.sortingOrder = 1;
+        Label.GetComponent<Renderer>().sortingOrder = 2;
     }
 
-    void OnMouseDown()
-    {
-        OnLeftClick?.Invoke(Row, Col);
-    }
+    void OnMouseDown() => OnLeftClick?.Invoke(Row, Col);
 
     void OnMouseOver()
     {
@@ -50,24 +63,65 @@ public class CellView : MonoBehaviour
     public void Refresh(Cell cell, bool revealAll)
     {
         if (revealAll && cell.isMine && !cell.isRevealed)
-            Set(ColorRevealed, "●", Color.white);
+            Set(RevealedVariant(), SpriteRabbit, "", Color.white);
         else if (revealAll && cell.isFlagged && !cell.isMine)
-            Set(ColorRevealed, "F✕", Color.white);
+            Set(SpriteCovered, SpriteFlag, "✕", Color.red);
         else if (cell.isRevealed && cell.isMine)
-            Set(ColorMineHit, "●", Color.white);
+            Set(SpriteMineHit, SpriteRabbit, "", Color.white);
         else if (cell.isRevealed && cell.adjacentMines > 0)
-            Set(ColorRevealed, cell.adjacentMines.ToString(), NumberColors[cell.adjacentMines]);
+            SetNumber(cell.adjacentMines);
         else if (cell.isRevealed)
-            Set(ColorRevealed, "", Color.white);
+            Set(RevealedVariant(), FlowerVariant(), "", Color.white);
         else if (cell.isFlagged)
-            Set(ColorCovered, "F", Color.white);
+            Set(SpriteCovered, SpriteFlag, "", Color.white);
         else
-            Set(ColorCovered, "", Color.white);
+            Set(SpriteCovered, null, "", Color.white);
     }
 
-    void Set(Color bg, string text, Color textColor)
+    public void HideIcon()
     {
-        Background.color = bg;
+        Icon.enabled = false;
+    }
+
+    public void ShowFlower()
+    {
+        Sprite flower = FlowerVariant();
+        if (flower == null) return;
+        Icon.sprite = flower;
+        Icon.enabled = true;
+    }
+
+    Sprite FlowerVariant()
+    {
+        if (SpriteFlowers == null || SpriteFlowers.Length == 0) return null;
+        return SpriteFlowers[Mathf.Abs(Row * 7 + Col * 13) % SpriteFlowers.Length];
+    }
+
+    Sprite RevealedVariant()
+    {
+        return ((Row * 9 + Col) % 3) switch
+        {
+            0 => SpriteRevealed1,
+            1 => SpriteRevealed2,
+            _ => SpriteRevealed3,
+        };
+    }
+
+    void SetNumber(int n)
+    {
+        Sprite numSprite = n switch { 1 => SpriteNumber1, 2 => SpriteNumber2, 3 => SpriteNumber3, _ => null };
+        if (numSprite != null)
+            Set(RevealedVariant(), numSprite, "", Color.white);
+        else
+            Set(RevealedVariant(), null, n.ToString(), NumberColors[n]);
+    }
+
+    void Set(Sprite bg, Sprite icon, string text, Color textColor)
+    {
+        Background.sprite = bg;
+        Background.color = Color.white;
+        Icon.sprite = icon;
+        Icon.enabled = icon != null;
         Label.text = text;
         Label.color = textColor;
     }
