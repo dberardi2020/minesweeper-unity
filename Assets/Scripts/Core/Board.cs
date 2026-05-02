@@ -2,11 +2,19 @@ using System.Collections.Generic;
 
 public class Board
 {
-    const int Rows = 9;
-    const int Cols = 9;
-    const int MineCount = 10;
+    public readonly int Rows;
+    public readonly int Cols;
+    public readonly int MineCount;
 
-    public Cell[,] Cells = new Cell[Rows, Cols];
+    public Cell[,] Cells;
+
+    public Board(int rows, int cols, int mineCount)
+    {
+        Rows = rows;
+        Cols = cols;
+        MineCount = mineCount;
+        Cells = new Cell[rows, cols];
+    }
 
     public int FlagCount
     {

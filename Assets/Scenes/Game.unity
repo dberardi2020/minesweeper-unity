@@ -347,6 +347,10 @@ MonoBehaviour:
   cellPrefab: {fileID: 4621547795271368862, guid: 8f649ece8d92b6942b3ba801a67e23e5, type: 3}
   gridParent: {fileID: 1224851607}
   headerView: {fileID: 259894696}
+  rows: 16
+  cols: 16
+  mineCount: 25
+  testMode: 0
 --- !u!1 &259894694
 GameObject:
   m_ObjectHideFlags: 0
