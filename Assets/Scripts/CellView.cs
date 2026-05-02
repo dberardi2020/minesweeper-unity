@@ -30,9 +30,7 @@ public class CellView : MonoBehaviour
     public Sprite SpriteQuestion1;
     public Sprite SpriteQuestion2;
     public Sprite SpriteRabbit;
-    public Sprite SpriteNumber1;
-    public Sprite SpriteNumber2;
-    public Sprite SpriteNumber3;
+    public Sprite[] SpriteNumbers; // index 0 unused; 1–8 map to adjacentMines value
 
     [Header("Flower Sprites")]
     public Sprite[] SpriteFlowers;
@@ -127,7 +125,7 @@ public class CellView : MonoBehaviour
 
     void SetNumber(int n)
     {
-        Sprite numSprite = n switch { 1 => SpriteNumber1, 2 => SpriteNumber2, 3 => SpriteNumber3, _ => null };
+        Sprite numSprite = (SpriteNumbers != null && n < SpriteNumbers.Length) ? SpriteNumbers[n] : null;
         if (numSprite != null)
             Set(RevealedVariant(), numSprite, "", Color.white);
         else
