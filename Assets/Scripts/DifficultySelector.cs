@@ -39,9 +39,9 @@ public class DifficultySelector : MonoBehaviour
             btnGo.transform.SetParent(root.transform, false);
 
             var rect = btnGo.AddComponent<RectTransform>();
-            rect.anchorMin = new Vector2(i / 3f, 0f);
-            rect.anchorMax = new Vector2((i + 1) / 3f, 0f);
-            rect.pivot     = new Vector2(0.5f, 0f);
+            rect.anchorMin = new Vector2(i / 3f, 1f);
+            rect.anchorMax = new Vector2((i + 1) / 3f, 1f);
+            rect.pivot     = new Vector2(0.5f, 1f);
             rect.anchoredPosition = Vector2.zero;
             rect.sizeDelta = new Vector2(-10f, 32f);
 

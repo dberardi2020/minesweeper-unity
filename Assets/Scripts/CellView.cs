@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class CellView : MonoBehaviour
@@ -52,10 +53,15 @@ public class CellView : MonoBehaviour
         Label.GetComponent<Renderer>().sortingOrder = 2;
     }
 
-    void OnMouseDown() => OnLeftClick?.Invoke(Row, Col);
+    void OnMouseDown()
+    {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+        OnLeftClick?.Invoke(Row, Col);
+    }
 
     void OnMouseOver()
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
         if (Mouse.current.rightButton.wasPressedThisFrame)
             OnRightClick?.Invoke(Row, Col);
     }
