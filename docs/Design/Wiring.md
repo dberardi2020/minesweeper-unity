@@ -128,6 +128,16 @@ Manages the three header elements. Assigned to the `Header` GameObject.
 
 The reset button click uses `OnMouseDown` on its `BoxCollider2D`, same pattern as cells.
 
+### Header — Two-Layer Rendering
+
+The header is rendered in two independent layers.
+
+**Layer 1 — background tiles.** 16×16px sprites placed on the integer world grid: endcaps at each edge, counter area backgrounds, and middle fills between them. These follow the same tile grid as the cell layer and never move.
+
+**Layer 2 — content.** Digit sprites and the face button sprite are free-positioned GameObjects with a higher sorting order. They are not constrained to the tile grid, so a digit can be placed at any sub-pixel offset. This lets narrow digits (e.g. "1") be right-aligned and wide digits (e.g. "8") centered within their slot without touching the background layer.
+
+A planned `DigitDisplay` component will own three `SpriteRenderer` children — one per digit slot — plus a `Sprite[10]` array (digits 0–9). It exposes a single `SetValue(int)` method that maps the value to the correct sprites for the hundreds, tens, and ones slots. `HeaderView` will hold two `DigitDisplay` references (mine counter and timer) and call `SetValue` as part of its `Refresh()`.
+
 ---
 
 ## Data Flow
