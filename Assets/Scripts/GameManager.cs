@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
 
         if (_state != GameState.Playing) return;
         _timer += Time.deltaTime;
-        headerView.Refresh(_state, _mineCount - _board.FlagCount, Mathf.FloorToInt(_timer));
+        RefreshHeader();
     }
 
     void BuildGrid()
@@ -212,7 +212,19 @@ public class GameManager : MonoBehaviour
 
     void RefreshHeader()
     {
-        headerView.Refresh(_state, _mineCount - _board.FlagCount, Mathf.FloorToInt(_timer));
+        headerView.Refresh(_state, _mineCount - _board.FlagCount, Mathf.FloorToInt(_timer), SafeProgress());
+    }
+
+    float SafeProgress()
+    {
+        int totalSafe = _rows * _cols - _mineCount;
+        if (totalSafe == 0 || _state == GameState.Ready) return 0f;
+        int revealed = 0;
+        for (int r = 0; r < _rows; r++)
+            for (int c = 0; c < _cols; c++)
+                if (_board.Cells[r, c].isRevealed && !_board.Cells[r, c].isMine)
+                    revealed++;
+        return (float)revealed / totalSafe;
     }
 
     void ApplyDifficulty()

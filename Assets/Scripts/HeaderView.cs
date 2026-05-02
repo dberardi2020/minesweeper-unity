@@ -21,6 +21,14 @@ public class HeaderView : MonoBehaviour
     public Sprite HeaderCounterRight;
     public Sprite[] DigitSprites; // 11 sprites: indices 0-9 = digits, 10 = minus
 
+    [Header("Weather Icons")]
+    public Sprite WeatherDarkCloud;
+    public Sprite WeatherLightCloud;
+    public Sprite WeatherSun;
+    public Sprite WeatherRainbow;
+    public Sprite WeatherRain;
+    public Sprite WeatherStorm;
+
     public Action OnResetClick;
 
     // TMP sprite tags referencing the EmojiOne atlas (only these faces ship with TMP).
@@ -34,6 +42,7 @@ public class HeaderView : MonoBehaviour
     GameObject _bgContainer;
     DigitDisplay _mineDisplay;
     DigitDisplay _timerDisplay;
+    SpriteRenderer _weatherIcon;
 
     void Awake()
     {
@@ -54,6 +63,16 @@ public class HeaderView : MonoBehaviour
 
         if (MineCounter != null) MineCounter.gameObject.SetActive(false);
         if (Timer       != null) Timer.gameObject.SetActive(false);
+
+        bool useWeatherSprites = WeatherStorm != null;
+        if (ResetLabel != null) ResetLabel.gameObject.SetActive(!useWeatherSprites);
+        if (useWeatherSprites)
+        {
+            _weatherIcon = ResetButton.GetComponent<SpriteRenderer>();
+            if (_weatherIcon == null) _weatherIcon = ResetButton.gameObject.AddComponent<SpriteRenderer>();
+            _weatherIcon.sortingOrder = 2;
+            _weatherIcon.sprite = WeatherDarkCloud;
+        }
 
         float halfSpan = (cols - 1) / 2f;
 
@@ -98,7 +117,7 @@ public class HeaderView : MonoBehaviour
         return c % 2 == 0 ? HeaderMiddle : HeaderMiddle2;
     }
 
-    public void Refresh(GameState state, int minesRemaining, int seconds)
+    public void Refresh(GameState state, int minesRemaining, int seconds, float progress = 0f)
     {
         _state = state;
 
@@ -115,7 +134,11 @@ public class HeaderView : MonoBehaviour
             Timer.text = Mathf.Min(seconds, 999).ToString("D3");
         }
 
-        if (state != GameState.Playing)
+        if (_weatherIcon != null)
+        {
+            _weatherIcon.sprite = WeatherForProgress(state, progress);
+        }
+        else if (state != GameState.Playing)
         {
             ResetLabel.text = state switch
             {
@@ -124,5 +147,17 @@ public class HeaderView : MonoBehaviour
                 _              => FaceNormal
             };
         }
+    }
+
+    // v1: progress = revealed safe cells / total safe cells (0–1).
+    // Won → Rainbow, Lost → Storm, otherwise ramps DarkCloud → Rain → LightCloud → Sun.
+    Sprite WeatherForProgress(GameState state, float progress)
+    {
+        if (state == GameState.Lost) return WeatherStorm;
+        if (state == GameState.Won)  return WeatherRainbow;
+        if (progress >= 0.75f)       return WeatherSun;
+        if (progress >= 0.50f)       return WeatherLightCloud;
+        if (progress >= 0.25f)       return WeatherRain;
+        return WeatherDarkCloud;
     }
 }
