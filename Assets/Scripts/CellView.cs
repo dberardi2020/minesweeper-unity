@@ -75,11 +75,12 @@ public class CellView : MonoBehaviour
     {
         Sprite covered  = SpriteCoveredV2 != null ? SpriteCoveredV2 : SpriteCovered;
         Sprite blank    = SpriteCoveredBlank != null ? SpriteCoveredBlank : covered;
+        Sprite bg       = cell.hasBeenMarked ? blank : covered;
         Sprite question = UseV2Question && SpriteQuestion2 != null ? SpriteQuestion2 : SpriteQuestion1;
         if (revealAll && cell.isMine && !cell.isRevealed)
             Set(RevealedVariant(), SpriteRabbit, "", Color.white);
         else if (revealAll && cell.isFlagged && !cell.isMine)
-            Set(blank, SpriteFlag, "✕", Color.red);
+            Set(bg, SpriteFlag, "✕", Color.red);
         else if (cell.isRevealed && cell.isMine)
             Set(SpriteMineHit, SpriteRabbit, "", Color.white);
         else if (cell.isRevealed && cell.adjacentMines > 0)
@@ -87,11 +88,11 @@ public class CellView : MonoBehaviour
         else if (cell.isRevealed)
             Set(RevealedVariant(), FlowerVariant(), "", Color.white);
         else if (cell.isFlagged)
-            Set(blank, SpriteFlag, "", Color.white);
+            Set(bg, SpriteFlag, "", Color.white);
         else if (cell.isQuestion)
-            Set(blank, question, "", Color.white);
+            Set(bg, question, "", Color.white);
         else
-            Set(covered, null, "", Color.white);
+            Set(bg, null, "", Color.white);
     }
 
     public void HideIcon()

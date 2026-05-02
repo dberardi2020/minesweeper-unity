@@ -102,6 +102,7 @@ public class Board
         else
         {
             Cells[row, col].isFlagged = true;
+            Cells[row, col].hasBeenMarked = true;
         }
     }
 
