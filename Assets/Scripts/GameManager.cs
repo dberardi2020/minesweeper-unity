@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject go = Instantiate(cellPrefab, gridParent);
                 go.transform.localPosition = new Vector3(col, -row, 0);
-                go.transform.localScale = Vector3.one;
+                go.transform.localScale = new Vector3(0.95f, 0.95f, 1f);
 
                 CellView cv = go.GetComponent<CellView>();
                 cv.Row = row;
@@ -68,7 +68,13 @@ public class GameManager : MonoBehaviour
             -10f
         );
 
-        cam.orthographicSize = gridHeight / 2f + 0.5f;
+        // Snap PPU to a multiple of 20 so the 0.05-unit tile gap maps to a whole pixel.
+        float rawSize    = gridHeight / 2f + 0.5f;
+        float rawPpu     = cam.pixelHeight / (rawSize * 2f);
+        float snappedPpu = Mathf.Round(rawPpu / 20f) * 20f;
+        cam.orthographicSize = snappedPpu > 0
+            ? cam.pixelHeight / (snappedPpu * 2f)
+            : rawSize;
     }
 
     void HandleLeftClick(int row, int col)
@@ -138,6 +144,7 @@ public class GameManager : MonoBehaviour
         _timer = 0f;
         BuildGrid();
         headerView.transform.position = new Vector3((_cols - 1) / 2f, 1f, 0f);
+        headerView.Build(_cols);
         FitCamera();
         RefreshHeader();
     }
