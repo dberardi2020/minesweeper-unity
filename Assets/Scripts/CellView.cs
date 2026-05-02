@@ -26,6 +26,7 @@ public class CellView : MonoBehaviour
 
     [Header("Icon Sprites")]
     public Sprite SpriteFlag;
+    public Sprite SpriteFlagWrong;
     public Sprite SpriteQuestion1;
     public Sprite SpriteQuestion2;
     public Sprite SpriteRabbit;
@@ -80,7 +81,7 @@ public class CellView : MonoBehaviour
         if (revealAll && cell.isMine && !cell.isRevealed)
             Set(RevealedVariant(), SpriteRabbit, "", Color.white);
         else if (revealAll && cell.isFlagged && !cell.isMine)
-            Set(bg, SpriteFlag, "✕", Color.red);
+            Set(bg, SpriteFlagWrong != null ? SpriteFlagWrong : SpriteFlag, "", Color.white);
         else if (cell.isRevealed && cell.isMine)
             Set(SpriteMineHit, SpriteRabbit, "", Color.white);
         else if (cell.isRevealed && cell.adjacentMines > 0)

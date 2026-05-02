@@ -470,6 +470,7 @@ MonoBehaviour:
   SpriteRevealed3: {fileID: -4718178546796562956, guid: f22978c3f566542b69b4c0c0e323679a, type: 3}
   SpriteMineHit: {fileID: 8139347485950991591, guid: 8ae8e16d155a940f39a36eac3b61e4f4, type: 3}
   SpriteFlag: {fileID: -3059288433473140158, guid: f485b5843bce84cd88067309d4ccc2ce, type: 3}
+  SpriteFlagWrong: {fileID: -3059288433473140158, guid: fe5b724b422446919680a4947324a532, type: 3}
   SpriteQuestion1: {fileID: -3059288433473140158, guid: c3de08303aa6486ba467bac04f4c236e, type: 3}
   SpriteQuestion2: {fileID: -3059288433473140158, guid: 7b6cacf95d2c4365a980f764a5436fb6, type: 3}
   SpriteRabbit: {fileID: 5035835132695561974, guid: ca342408b67404fcd92c3d29229c2904, type: 3}
