@@ -76,6 +76,7 @@ public class Board
         if (Cells[row, col].isRevealed || Cells[row, col].isFlagged) return;
 
         Cells[row, col].isRevealed = true;
+        Cells[row, col].isQuestion = false;
 
         if (Cells[row, col].adjacentMines == 0 && !Cells[row, col].isMine)
         {
@@ -86,10 +87,22 @@ public class Board
         }
     }
 
-    public void ToggleFlag(int row, int col)
+    public void CycleMarker(int row, int col)
     {
         if (Cells[row, col].isRevealed) return;
-        Cells[row, col].isFlagged = !Cells[row, col].isFlagged;
+        if (Cells[row, col].isFlagged)
+        {
+            Cells[row, col].isFlagged = false;
+            Cells[row, col].isQuestion = true;
+        }
+        else if (Cells[row, col].isQuestion)
+        {
+            Cells[row, col].isQuestion = false;
+        }
+        else
+        {
+            Cells[row, col].isFlagged = true;
+        }
     }
 
     public bool CheckWin()

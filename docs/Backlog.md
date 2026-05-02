@@ -16,7 +16,7 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 **Description:** Progressive face happiness that scales with win percentage.
 
-**Notes:** Neutral/nervous face at low win %, happy at mid, excited at high. Hover should trigger a funny/random reaction. Click reaction should be distinct from the current surprised face.
+**Notes:** Neutral/nervous face at low win %, happy at mid, excited at high. Hover should trigger a funny/random reaction. Click reaction should be distinct from the current surprised face
 
 ---
 

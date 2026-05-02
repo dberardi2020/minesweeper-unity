@@ -16,6 +16,9 @@ public class CellView : MonoBehaviour
 
     [Header("Background Sprites")]
     public Sprite SpriteCovered;
+    public Sprite SpriteCoveredV2;
+    public Sprite SpriteCoveredBlank;
+    public static bool UseV2Question;
     public Sprite SpriteRevealed1;
     public Sprite SpriteRevealed2;
     public Sprite SpriteRevealed3;
@@ -23,6 +26,8 @@ public class CellView : MonoBehaviour
 
     [Header("Icon Sprites")]
     public Sprite SpriteFlag;
+    public Sprite SpriteQuestion1;
+    public Sprite SpriteQuestion2;
     public Sprite SpriteRabbit;
     public Sprite SpriteNumber1;
     public Sprite SpriteNumber2;
@@ -68,10 +73,13 @@ public class CellView : MonoBehaviour
 
     public void Refresh(Cell cell, bool revealAll)
     {
+        Sprite covered  = SpriteCoveredV2 != null ? SpriteCoveredV2 : SpriteCovered;
+        Sprite blank    = SpriteCoveredBlank != null ? SpriteCoveredBlank : covered;
+        Sprite question = UseV2Question && SpriteQuestion2 != null ? SpriteQuestion2 : SpriteQuestion1;
         if (revealAll && cell.isMine && !cell.isRevealed)
             Set(RevealedVariant(), SpriteRabbit, "", Color.white);
         else if (revealAll && cell.isFlagged && !cell.isMine)
-            Set(SpriteCovered, SpriteFlag, "✕", Color.red);
+            Set(blank, SpriteFlag, "✕", Color.red);
         else if (cell.isRevealed && cell.isMine)
             Set(SpriteMineHit, SpriteRabbit, "", Color.white);
         else if (cell.isRevealed && cell.adjacentMines > 0)
@@ -79,9 +87,11 @@ public class CellView : MonoBehaviour
         else if (cell.isRevealed)
             Set(RevealedVariant(), FlowerVariant(), "", Color.white);
         else if (cell.isFlagged)
-            Set(SpriteCovered, SpriteFlag, "", Color.white);
+            Set(blank, SpriteFlag, "", Color.white);
+        else if (cell.isQuestion)
+            Set(blank, question, "", Color.white);
         else
-            Set(SpriteCovered, null, "", Color.white);
+            Set(covered, null, "", Color.white);
     }
 
     public void HideIcon()

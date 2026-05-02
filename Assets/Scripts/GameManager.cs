@@ -31,6 +31,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            CellView.UseV2Question = !CellView.UseV2Question;
+            RefreshAll(_state == GameState.Lost || _state == GameState.Won);
+        }
+
         if (_state != GameState.Playing) return;
         _timer += Time.deltaTime;
         headerView.Refresh(_state, _mineCount - _board.FlagCount, Mathf.FloorToInt(_timer));
@@ -44,7 +50,7 @@ public class GameManager : MonoBehaviour
             {
                 GameObject go = Instantiate(cellPrefab, gridParent);
                 go.transform.localPosition = new Vector3(col, -row, 0);
-                go.transform.localScale = new Vector3(0.95f, 0.95f, 1f);
+                go.transform.localScale = Vector3.one;
 
                 CellView cv = go.GetComponent<CellView>();
                 cv.Row = row;
@@ -123,7 +129,7 @@ public class GameManager : MonoBehaviour
     void HandleRightClick(int row, int col)
     {
         if (_state != GameState.Playing) return;
-        _board.ToggleFlag(row, col);
+        _board.CycleMarker(row, col);
         _cellViews[row, col].Refresh(_board.Cells[row, col], false);
         RefreshHeader();
     }
