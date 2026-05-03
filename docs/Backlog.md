@@ -4,11 +4,35 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 ---
 
-## Tile-Based Header (Next Milestone)
+## GardenSweeper Rename
 
-**Description:** Replace the TMP-based header with a proper tile-based implementation using artist-delivered assets.
+**Description:** Everything that still says "Minesweeper" needs updating.
 
-**Notes:** Artist is delivering a 96×16px header background tileset (6 tiles: left endcap, right endcap, counter-L bg, counter-R bg, 2 middle variants — each 16×16px). The header will span the full grid width using tiling middles; counter and timer will use the `DigitDisplay` component (3 SpriteRenderers + `Sprite[10]` array). On larger grids the header scales for free since it's just more tiles. TMP header looks small on Intermediate/Expert grids — acceptable until this ships.
+**Notes:** productName and bundle identifier are already set. Remaining: repository name, project folder (`minesweeper-unity/`), script and class names, scene names, any in-game text. Low risk but tedious — save for a quiet session.
+
+---
+
+## testMode / PlaceTestMines() Fix
+
+**Description:** `PlaceTestMines()` in GameManager has hardcoded row/col positions designed for a 9×9 grid. It quietly breaks on Intermediate or Expert.
+
+**Notes:** Either clamp the positions to board bounds, regenerate a valid test layout per difficulty, or gate the test mode to Beginner only with a runtime warning.
+
+---
+
+## Weather Cascade Skip
+
+**Description:** A large flood-fill reveal can uncover enough cells in one click to jump two or three weather states.
+
+**Notes:** Design question: is the smooth Weather arc a meaningful part of the experience, or just a nice detail? If meaningful, consider advancing one state per click rather than snapping to progress. Deferred until the overall game feel is more established.
+
+---
+
+## TMP "Can't Generate Mesh" Warning on ResetLabel
+
+**Description:** `ResetLabel` (the TMP fallback on the reset button) generates a harmless but noisy console warning.
+
+**Notes:** Reproduces when weather sprites are wired (label is hidden but TMP still tries to generate a mesh). Suppress by disabling the TMP component entirely when `useWeatherSprites` is true, or just leave it — it's a warning, not an error.
 
 ---
 
@@ -16,7 +40,7 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 **Description:** Progressive face happiness that scales with win percentage.
 
-**Notes:** Neutral/nervous face at low win %, happy at mid, excited at high. Hover should trigger a funny/random reaction. Click reaction should be distinct from the current surprised face
+**Notes:** Superseded in part by the weather icon system. Revisit when deciding on the reset button's final look — whether it stays as a weather icon or gets a face layer on top.
 
 ---
 
@@ -32,7 +56,7 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 **Description:** ScriptableObject-based skin system to reskin the game without touching code.
 
-**Notes:** Would enable a "deskinned" classic mode alongside themed skins. Keeps art and logic cleanly separated.
+**Notes:** Would enable a "deskinned" classic mode alongside the garden theme. Keeps art and logic cleanly separated.
 
 ---
 
@@ -40,7 +64,7 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 **Description:** Full difficulty/settings menu scene.
 
-**Notes:** Distinct from the simple in-game preset selector already planned. A proper menu scene with more configuration options.
+**Notes:** Distinct from the simple in-game preset selector already shipped. A proper menu scene with more configuration options.
 
 ---
 
@@ -65,11 +89,3 @@ Future ideas and features to revisit — not currently scheduled for implementat
 **Description:** Auto-reveal neighbors when the correct number of flags are adjacent to a revealed cell.
 
 **Notes:** Classic Minesweeper behavior, typically triggered by middle-click or double-click.
-
----
-
-## Question Mark State
-
-**Description:** A third cell state between covered and flagged (covered → flagged → ? → covered cycle).
-
-**Notes:** Classic optional behavior. Useful for marking uncertain cells without committing a flag.
