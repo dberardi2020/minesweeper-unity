@@ -20,30 +20,6 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 ---
 
-## Weather Cascade Skip
-
-**Description:** A large flood-fill reveal can uncover enough cells in one click to jump two or three weather states.
-
-**Notes:** Design question: is the smooth Weather arc a meaningful part of the experience, or just a nice detail? If meaningful, consider advancing one state per click rather than snapping to progress. Deferred until the overall game feel is more established.
-
----
-
-## TMP "Can't Generate Mesh" Warning on ResetLabel
-
-**Description:** `ResetLabel` (the TMP fallback on the reset button) generates a harmless but noisy console warning.
-
-**Notes:** Reproduces when weather sprites are wired (label is hidden but TMP still tries to generate a mesh). Suppress by disabling the TMP component entirely when `useWeatherSprites` is true, or just leave it — it's a warning, not an error.
-
----
-
-## Emoji Reactions
-
-**Description:** Progressive face happiness that scales with win percentage.
-
-**Notes:** Superseded in part by the weather icon system. Revisit when deciding on the reset button's final look — whether it stays as a weather icon or gets a face layer on top.
-
----
-
 ## Flower Picking Mechanic
 
 **Description:** Clicking a revealed flower cell "picks" it and increments a session counter.
