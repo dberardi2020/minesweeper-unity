@@ -1,11 +1,12 @@
 ---
-title: Minesweeper — Logic Design
+title: GardenSweeper — Logic Design
 date: 2026-04-24
+updated: 2026-05-02
 type: design
-status: planning
+status: active
 ---
 
-# Minesweeper — Logic Design
+# GardenSweeper — Logic Design
 
 Pure game logic — no Unity, no MonoBehaviours. This is the data model and algorithms only.
 
@@ -20,13 +21,15 @@ struct Cell {
     bool isMine;
     bool isRevealed;
     bool isFlagged;
-    int  adjacentMines;  // 0–8; only meaningful if !isMine
+    bool isQuestion;       // right-click second state
+    bool hasBeenMarked;    // true once a cell has been flagged or questioned; affects covered tile variant
+    int  adjacentMines;    // 0–8; only meaningful if !isMine
 }
 ```
 
 ### Board
 
-A 2D array of Cells: `Cell[rows, cols]` — for v1, 9x9.
+A 2D array of Cells: `Cell[rows, cols]`. Dimensions are set at construction from the active difficulty preset.
 
 ---
 
@@ -43,6 +46,16 @@ Ready → Playing → Won
 | `Playing` | First click made, mines placed, timer running. |
 | `Won` | All non-mine cells revealed. |
 | `Lost` | Player revealed a mine. |
+
+---
+
+## Difficulty Presets
+
+| Preset | Rows | Cols | Mines |
+|--------|------|------|-------|
+| Beginner | 9 | 9 | 10 |
+| Intermediate | 16 | 16 | 40 |
+| Expert | 16 | 30 | 99 |
 
 ---
 
@@ -81,16 +94,16 @@ Recursion terminates naturally at numbered cells and board edges.
 
 After each reveal: if the count of unrevealed cells equals the total mine count, the game is Won.
 
-### Flag Toggle
+### Marker Cycle (right-click)
 
-Right-click on a covered cell: toggles `isFlagged`. Has no effect on revealed cells. Does not check if the cell is actually a mine.
+Right-click on a covered cell cycles its marker state:
 
----
+```
+covered (unmarked) → flagged → question → covered (marked)
+```
 
-## Constants (v1)
-
-| Constant | Value |
-|----------|-------|
-| Rows | 9 |
-| Cols | 9 |
-| Mines | 10 |
+- `isFlagged` and `isQuestion` are mutually exclusive; both false means covered/unmarked
+- `hasBeenMarked` is set to true the first time the cell enters the flagged state, and stays true — it drives a visual distinction (flat vs. raised covered tile) even after the flag is removed
+- Flagged cells cannot be revealed by left-click
+- Question mark cells can be revealed by left-click (they are not protected)
+- Right-click has no effect on revealed cells

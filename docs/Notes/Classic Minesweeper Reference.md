@@ -18,7 +18,7 @@ How the original game works, end-to-end. This is the canonical behavior our game
 | Intermediate | 16×16 | 40 |
 | Expert | 30×16 | 99 |
 
-Our v1 implements Beginner only (9×9, 10 mines).
+All three difficulty presets are implemented.
 
 ---
 
@@ -129,10 +129,13 @@ Face states:
 
 ---
 
-## What We Are Not Implementing (v1)
+## What We Are Not Implementing
 
-- **Chording:** In the original game, left+right clicking a revealed numbered cell auto-reveals all adjacent unflagged cells if the correct number of adjacent flags are already placed. Widely used by experienced players. Not in v1.
-- **Question mark state:** Some versions allow a third right-click state (covered → flag → ? → covered). Not in v1.
-- **Multiple difficulty modes:** Intermediate and Expert grid sizes. Not in v1.
-- **Auto-flag on win:** Remaining unflagged mines auto-flag when the player wins. Not in v1.
-- **Best times:** Classic leaderboard per difficulty. Not in v1.
+- **Chording:** In the original game, left+right clicking a revealed numbered cell auto-reveals all adjacent unflagged cells if the correct number of adjacent flags are already placed. Widely used by experienced players. Not implemented.
+- **Auto-flag on win:** Remaining unflagged mines auto-flag when the player wins. Not implemented.
+- **Best times:** Classic leaderboard per difficulty. Not implemented.
+
+## Deviations from Classic Behavior
+
+- **Question mark state:** Implemented. Right-click cycles covered → flagged → ? → covered. Question-marked cells can still be revealed by left-click (unlike flags).
+- **Multiple difficulty modes:** Implemented. Beginner (9×9, 10), Intermediate (16×16, 40), Expert (16×30, 99).

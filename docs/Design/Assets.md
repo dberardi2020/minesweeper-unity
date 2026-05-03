@@ -1,11 +1,12 @@
 ---
-title: Minesweeper — Assets
+title: GardenSweeper — Assets
 date: 2026-04-24
+updated: 2026-05-02
 type: design
 status: active
 ---
 
-# Minesweeper — Assets
+# GardenSweeper — Assets
 
 Every asset required to build the game. For each: what it is, its spec, and how it will be created.
 
@@ -13,71 +14,126 @@ Every asset required to build the game. For each: what it is, its spec, and how 
 
 ## Creation Strategy
 
-Cells use PNG sprites for backgrounds and icon overlays; sprite refs are set in the Inspector on the `CellView` prefab. Numbers 1–3 use icon sprites; 4–8 fall back to colored TextMeshPro text. The header is still TMP-based — tile-based header with digit sprites is the next milestone (see Backlog).
+All cell backgrounds and icon overlays are PNG sprites. Sprite refs are set in the Inspector on the `CellView` prefab. Numbers 1–4 use icon sprites; 5–8 fall back to colored TMP text (sprite slots exist but are null). The header is tile-based with sprite digits (DigitDisplay). The reset button shows a weather icon sprite that reflects game progress.
 
 All game logic (`Board.cs`, `Cell.cs`) is sprite-agnostic; swapping visuals requires only `CellView.cs` and the prefab.
 
 ---
 
-## Cell Tiles
+## Sprite Import Standard
 
-The grid is 9x9. Each cell has one visual state at a time.
+All pixel art sprites in this project:
 
-| State | Trigger | Visual (v1) |
-|-------|---------|-------------|
-| Covered | Default | Mid-gray quad |
-| Flagged | Right-clicked by player | Mid-gray quad + `F` |
-| Revealed — empty | Revealed, 0 adjacent mines | Dark-gray quad, no content |
-| Revealed — number | Revealed, 1–8 adjacent mines | Dark-gray quad + colored number (TextMeshPro) |
-| Mine — hit | Player clicked this mine | Red quad + `●` |
-| Mine — revealed | All other mines shown on loss | Dark-gray quad + `●` |
-| Mine — wrong flag | Flagged cell that wasn't a mine, shown on loss | Dark-gray quad + `F✕` |
+| Setting | Value |
+|---------|-------|
+| Filter Mode | Point (no filter) |
+| Pixels Per Unit | 16 |
+| Texture Compression | None (0) |
+| sRGB | Yes |
+| Sprite Mode | Single |
 
-> Note: TMP's default font does not support color emoji. Emoji (🚩, 💣) would require a TMP Sprite Asset. Plain Unicode symbols are used for v1. Swap in a Sprite Asset post-v1 if desired.
+Deviating from these settings causes blurring or anti-aliasing on pixel art.
 
-**Number colors** — applied via TextMeshPro vertex color:
+---
 
-| Number | Color     | Hex     |
-| ------ | --------- | ------- |
-| 1      | Blue      | #0000FF |
-| 2      | Green     | #007B00 |
-| 3      | Red       | #FF0000 |
-| 4      | Dark blue | #00007B |
-| 5      | Dark red  | #7B0000 |
-| 6      | Teal      | #007B7B |
-| 7      | Black     | #000000 |
-| 8      | Gray      | #7B7B7B |
+## Cell Backgrounds
+
+Three background tiles for distinct cell appearances. All content (numbers, mine, flag, etc.) is handled by a separate icon overlay layer — backgrounds are content-free.
+
+| File | Dimensions | Description |
+|------|------------|-------------|
+| `cell_covered.png` | 16×16 | Raised bevel tile — mid-gray body, white/light top and left edges, dark bottom and right edges |
+| `cell_covered_v2.png` | 16×16 | Alternate raised tile variant |
+| `cell_covered_blank.png` | 16×16 | Flat covered tile — used after a cell has been flagged/questioned (subtle "touched" indicator) |
+| `cell_revealed_1.png` | 16×16 | Flat revealed tile variant 1 — thin dark border, no bevel |
+| `cell_revealed_2.png` | 16×16 | Flat revealed tile variant 2 |
+| `cell_revealed_3.png` | 16×16 | Flat revealed tile variant 3 |
+| `cell_mine_hit.png` | 16×16 | Red (#FF0000) fill — mine icon layers on top |
+
+Revealed variants are assigned by `(row * 9 + col) % 3` so the grid has visual texture without repeating.
+
+---
+
+## Icon Overlays
+
+Layered on top of cell backgrounds. Transparent backgrounds. Centered on the 16×16 cell.
+
+### Cell Icons
+
+| File | Dimensions | Description |
+|------|------------|-------------|
+| `icon_mine.png` | 12×12 | Mine sprite (garden theme: rabbit) — reused across mine-hit and mine-revealed states |
+| `icon_flag.png` | 12×12 | Flag sprite |
+| `icon_mine_wrong.png` | 16×16 | Wrong-flag indicator — shown on flagged cells that weren't mines at game over |
+| `icon_question_1.png` | 12×12 | Question mark sprite — default |
+| `icon_question_2.png` | 12×12 | Question mark sprite — alternate (toggled by Q key during gameplay) |
+
+### Number Sprites
+
+Sprite icons for adjacentMines values 1–8. Null slot falls back to colored TMP text. Currently: 1–4 are wired; 5–8 are null.
+
+| File | Dimensions | Color |
+|------|------------|-------|
+| `icon_number_1.png` | 16×16 | Blue (#0000FF) |
+| `icon_number_2.png` | 16×16 | Green (#007B00) |
+| `icon_number_3.png` | 16×16 | Red (#FF0000) |
+| `icon_number_4.png` | 16×16 | Dark blue (#00007B) |
+| `icon_number_5.png` | 16×16 | Dark red (#7B0000) — not yet wired |
+| `icon_number_6.png` | 16×16 | Teal (#007B7B) — not yet wired |
+| `icon_number_7.png` | 16×16 | Black (#000000) — not yet wired |
+| `icon_number_8.png` | 16×16 | Gray (#7B7B7B) — not yet wired |
+
+### Flower Sprites
+
+Used on empty-revealed cells. Multiple variants — each cell always gets the same flower (deterministic by row/col). Stored in `SpriteFlowers[]` array on CellView.
 
 ---
 
 ## Header Assets
 
-The header sits above the grid and contains three elements.
+### Tile Background
 
-### Mine Counter and Timer
+The tile-based header uses 7 sprite types. Layout for a grid of `cols` columns:
 
-- Both display as zero-padded 3-digit numbers (e.g. `010`, `003`)
-- v1: TextMeshPro with a monospaced font, colored red on dark background to approximate the classic LED display look
-- Font: a free 7-segment / LCD-style TrueType font (see note below)
+```
+[CapLeft][CounterL][CounterC][CounterR][Middle×(cols-8)][CounterL][CounterC][CounterR][CapRight]
+```
 
-**Digit sprite spec (post-v1).** 11 sprites: digits 0–9 plus a minus sign. Each is 10px wide × 16px tall, imported at 16 PPU (matching all other sprites). Three digits fill the 32px (2-tile) counter area with 1px padding on each side: `1 + 10 + 10 + 10 + 1 = 32`. Because digits are free-positioned on the content layer (see Wiring — Header Two-Layer Rendering), narrower glyphs such as "1" can be right-aligned within their slot without adjusting the background tiles.
+| File | Description |
+|------|-------------|
+| `header_cap_left.png` | Left endcap tile |
+| `header_cap_right.png` | Right endcap tile |
+| `header_counter_left.png` | Left side of counter background area |
+| `header_counter_center.png` | Center of counter background area |
+| `header_counter_right.png` | Right side of counter background area |
+| `header_middle.png` | Middle fill tile (even columns) |
+| `header_middle_2.png` | Middle fill tile (odd columns) — alternated for visual texture |
 
-### Reset Button
+All header tiles: 16×16px.
 
-- Displays a face icon that reacts to game state
-- v1: TextMeshPro with a large emoji character, centered on a button quad
+### Display Digits
 
-| Game State | Character |
-|------------|-----------|
-| Ready / Playing | 🙂 |
-| Player holding click | 😮 |
-| Won | 😎 |
-| Lost | 😵 |
+11 sprites for the DigitDisplay component (mine counter and timer). Indices 0–9 = digits, 10 = minus sign.
 
-### Header Panel
+| File | Dimensions | Description |
+|------|------------|-------------|
+| `digit_0.png` – `digit_9.png` | 13×23 | Red (#FF0000) 7-segment digit on black (#000000) background |
+| `digit_minus.png` | 13×23 | Center segment only — used when mine counter goes negative |
 
-- A quad behind all header elements, slightly lighter or darker than the window background
-- No border art in v1 — plain flat color
+### Weather Icons (Reset Button)
+
+Six 16×16 sprites driving the weather icon on the reset button. Progress thresholds and game-state mappings are in Wiring → HeaderView.
+
+| File | Condition |
+|------|-----------|
+| `weather_rain.png` | Default / 0–24% revealed |
+| `weather_dark_cloud.png` | 25–49% revealed |
+| `weather_light_cloud.png` | 50–74% revealed |
+| `weather_sun.png` | 75–99% revealed |
+| `weather_storm.png` | Lost |
+| `weather_rainbow.png` | Won |
+
+Location: `Assets/Sprites/header/header_weather_icons/`
 
 ---
 
@@ -87,65 +143,29 @@ Scene is sized in Unity units; `FitCamera()` recalculates orthographic size on e
 
 | Element | Size (Unity units) |
 |---------|--------------------|
-| Cell | 1 × 1 |
-| Grid | cols × rows (difficulty-dependent) |
-| Header height | ~1.5 units |
-| Total scene height | rows + 1.5 + padding |
-
-Difficulties: Beginner 9×9, Intermediate 16×16, Expert 30×16.
-
----
-
-## Fonts
-
-| Use | Font | Source |
-|-----|------|--------|
-| Mine counter / timer | Free 7-segment LCD font (e.g. "DSEG7 Classic") | Free download — dseg.tagimakot.com |
-| All other text | Unity default (Arial) | Built-in |
-
-The LCD font is the one asset that may need to be downloaded. Everything else uses Unity built-ins.
+| Cell | 1×1 (rendered at 0.95×0.95 to create 1px gaps) |
+| Grid | `cols × rows` (difficulty-dependent) |
+| Header height | 1 tile = 1 unit |
+| Total scene height | rows + 1 (header) + 1 (padding) |
 
 ---
 
 ## Audio
 
-No audio in v1. Out of scope.
-
----
-
-## Sprite Pass (Post-v1)
-
-Full sprite replacement (Option A) — all TMP characters and colored quad primitives are replaced with PNG sprites. See [Art Brief](Art%20Brief.md) for the complete asset list formatted for designer handoff.
-
-### Layering Approach
-
-Cell sprites use two layers: a **background tile** and an **icon overlay**.
-
-The three background tiles cover distinct cell appearances: covered (raised bevel), revealed (flat), and mine-hit (red flat). All cell content — mine glyph, flag, X, and numbers 1-8 — is handled by icon overlay sprites on a separate layer. This means `icon_mine.png` reuses across both mine-hit and mine-revealed states. The background tiles themselves are content-free.
-
-This avoids a combinatorial explosion of baked-in sprites and keeps the two concerns independent.
-
-### Code Changes
-
-All changes are in the display layer. Game logic (`Board.cs`, `Cell.cs`, `GameState.cs`) is untouched.
-
-**`CellView.cs`**
-- Add serialized sprite fields for each background tile and each icon overlay
-- In `Refresh()`: replace `Background.color = ...` with `Background.sprite = ...`; set the Icon `SpriteRenderer` sprite (or null) per state
-- Remove all TMP `Label` assignments for icons and numbers — the Label component can be dropped from the prefab
-
-**`CellPrefab.prefab`**
-- Add an `Icon` child GameObject with its own `SpriteRenderer` for the overlay layer
-- Remove the existing TMP `Label` child
-
-**`GameManager.cs`** — No changes required.
+No audio. Out of scope.
 
 ---
 
 ## v2 — Animated Events
 
-Design guidance for adding animation post-v1 sprite pass. Each animation is a sprite sheet — all frames in one PNG, arranged left-to-right in a single row.
+Design guidance for adding animation. Each animation is a sprite sheet — all frames in one PNG, left-to-right in a single row.
 
-Any player-triggered event is a candidate: mine detonation, flag placement, cell reveal, win state. The art decision is which events get motion and which stay static.
+| File | Frames | Loop | Trigger |
+|------|--------|------|---------|
+| `anim_mine_detonate.png` | 6–8 | No | Player clicks a mine |
+| `anim_flag_place.png` | 4–6 | No | Right-click places a flag |
+| `anim_flag_remove.png` | 4–6 | No | Right-click removes a flag |
+| `anim_cell_reveal.png` | 4–6 | No | Cell reveals |
+| `anim_win.png` | 6–8 | Yes | Looping on all cells during win state |
 
-See [Art Brief](Art%20Brief.md) for the v2 animation asset table with frame counts, loop behavior, and file specs.
+All sheets: horizontal strips (single row), same dimensions per frame, transparent backgrounds.

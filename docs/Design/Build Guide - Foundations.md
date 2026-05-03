@@ -5,7 +5,9 @@ type: build-guide
 status: planning
 ---
 
-# Minesweeper — Build Guide
+# GardenSweeper — Build Guide
+
+> **Status (2026-05-02):** Phases 1–6 complete. Phase 7 (final pass) complete — `GardenSweeper.app` built and verified. This guide is now a historical reference for how the game was assembled.
 
 Sequenced implementation steps. Each phase produces something runnable — never a long stretch with nothing visible. Complete the design docs before starting here.
 
@@ -324,37 +326,13 @@ Header                    ← empty GameObject at (4, 1.25, 0); has HeaderView s
 
 ## Phase 7 — Final Pass
 
-- [ ] **[You]** Verify all 7 cell visual states:
-  - **Covered** — on a fresh game, all cells show the grey covered tile
-  - **Flagged** — right-click any covered cell; it shows a flag marker
-  - **Revealed empty** — left-click a cell with no adjacent mines; surrounding cells cascade open showing flat, blank tiles
-  - **Revealed number** — cells bordering a mine region display 1–8 in the correct colors (1=blue, 2=green, 3=red, etc.)
-  - **Mine hit** — left-click a mine; that cell shows a red background with a mine icon
-  - **Mine revealed** — all other mines appear on loss with a non-red background and mine icon
-  - **Wrong flag** — flag a safe cell before losing; on loss that cell shows a crossed-out flag
+- [x] **[You]** Verify all cell visual states (covered, flagged, question, revealed empty, revealed number, mine hit, mine revealed, wrong flag)
+- [x] **[You]** Verify mine counter goes negative when over-flagged
+- [x] **[You]** Verify first click is always safe
+- [x] **[You]** Verify flood fill behavior
+- [x] **[You]** Verify win detection
+- [x] **[You]** Verify wrong-flag display on loss
+- [x] **[You]** Verify weather icon cycles through all 6 states across a full game
+- [x] **[You]** `GardenSweeper.app` built and verified on Mac desktop
 
-- [ ] **[You]** Verify mine counter goes negative when over-flagged:
-  - Place more than 10 flags in one game; confirm the counter shows `−1`, `−2`, etc.
-
-- [ ] **[You]** Verify timer display caps at 999:
-  - Temporarily change the cap in `HeaderView.cs` (`Mathf.Min(seconds, 999)`) to a small number like `5`, enter Play mode, let the timer reach 6, confirm the display holds at `005`, then revert the change
-
-- [ ] **[You]** Verify first click is always safe:
-  - Play 10+ games and always click the same cell first — you should never lose on the first click
-
-- [ ] **[You]** Verify flood fill behavior:
-  - Click a cell with 0 adjacent mines and watch a region open automatically
-  - Confirm no mines are uncovered by the flood fill
-  - Confirm a flagged cell adjacent to an empty region is not auto-revealed
-
-- [ ] **[You]** Verify win detection:
-  - Play a full game to completion by uncovering every non-mine cell
-  - Confirm the win state triggers and the timer stops
-
-- [ ] **[You]** Verify wrong-flag display on loss:
-  - Flag at least one cell you know is not a mine (observe positions via `Debug.Log` in `PlaceMines` if needed)
-  - Click a mine to trigger loss — the incorrectly flagged cell should show the crossed-flag state
-
-- [ ] **[You]** Read through all five design docs. Confirm every decision documented in them is reflected in the built game.
-
-**Checkpoint:** All verification items pass. Docs reviewed. Ship.
+**Checkpoint:** All verification items pass. `GardenSweeper.app` shipped.

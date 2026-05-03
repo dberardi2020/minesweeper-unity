@@ -470,13 +470,16 @@ MonoBehaviour:
   SpriteRevealed3: {fileID: -4718178546796562956, guid: f22978c3f566542b69b4c0c0e323679a, type: 3}
   SpriteMineHit: {fileID: 8139347485950991591, guid: 8ae8e16d155a940f39a36eac3b61e4f4, type: 3}
   SpriteFlag: {fileID: -3059288433473140158, guid: f485b5843bce84cd88067309d4ccc2ce, type: 3}
-  SpriteFlagWrong: {fileID: -3059288433473140158, guid: fe5b724b422446919680a4947324a532, type: 3}
+  SpriteFlagWrong: {fileID: 21300000, guid: 5cc0a190fc9ca45cea73de9944af31b4, type: 3}
   SpriteQuestion1: {fileID: -3059288433473140158, guid: c3de08303aa6486ba467bac04f4c236e, type: 3}
   SpriteQuestion2: {fileID: -3059288433473140158, guid: 7b6cacf95d2c4365a980f764a5436fb6, type: 3}
   SpriteRabbit: {fileID: 5035835132695561974, guid: ca342408b67404fcd92c3d29229c2904, type: 3}
-  SpriteNumber1: {fileID: 4419486208207679604, guid: 92fd4b47ca1e34d589a0518d8f15cc6f, type: 3}
-  SpriteNumber2: {fileID: 5474679738958099278, guid: 581a4219d94f44bbea57eb8380530251, type: 3}
-  SpriteNumber3: {fileID: 2142464593348499656, guid: a8a9b0ab7bee048d092327e70f05065a, type: 3}
+  SpriteNumbers:
+  - {fileID: 0}
+  - {fileID: 4419486208207679604, guid: 92fd4b47ca1e34d589a0518d8f15cc6f, type: 3}
+  - {fileID: 5474679738958099278, guid: 581a4219d94f44bbea57eb8380530251, type: 3}
+  - {fileID: 2142464593348499656, guid: a8a9b0ab7bee048d092327e70f05065a, type: 3}
+  - {fileID: 21300000, guid: 5390444ce01244ff08305dfbfd1b5872, type: 3}
   SpriteFlowers:
   - {fileID: -8503935516423094657, guid: 6b2eac786faf84c3495f358ae5020761, type: 3}
   - {fileID: -1753048962711263045, guid: c15fc8f3a37df455baa9407db91c7265, type: 3}
