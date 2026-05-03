@@ -184,14 +184,25 @@ public class GameManager : MonoBehaviour
         _bloom = null;
     }
 
-    // Fixed mine layout for test mode — works on any grid size >= 9x9.
-    // Mines form a diagonal boundary so clicking top-right always gives a clean bloom.
+    // Fixed-seed mine placement for test mode. Top-right corner (0, _cols-1) is always safe
+    // so clicking there produces a predictable bloom. Places exactly _mineCount mines.
     void PlaceTestMines()
     {
-        (int r, int c)[] positions = { (2,4),(3,3),(4,2),(4,4),(5,1),(5,5),(6,0),(6,6),(7,7),(8,8) };
-        foreach (var (r, c) in positions)
-            if (r < _rows && c < _cols)
-                _board.Cells[r, c].isMine = true;
+        var pool = new List<(int r, int c)>();
+        for (int r = 0; r < _rows; r++)
+            for (int c = 0; c < _cols; c++)
+                if (r != 0 || c != _cols - 1)
+                    pool.Add((r, c));
+
+        var rng = new System.Random(42);
+        for (int i = pool.Count - 1; i > 0; i--)
+        {
+            int j = rng.Next(i + 1);
+            (pool[i], pool[j]) = (pool[j], pool[i]);
+        }
+
+        for (int i = 0; i < _mineCount; i++)
+            _board.Cells[pool[i].r, pool[i].c].isMine = true;
     }
 
     bool[,] Snapshot()

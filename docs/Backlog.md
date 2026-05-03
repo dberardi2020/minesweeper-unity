@@ -12,13 +12,6 @@ Future ideas and features to revisit — not currently scheduled for implementat
 
 ---
 
-## testMode / PlaceTestMines() Fix
-
-**Description:** `PlaceTestMines()` in GameManager has hardcoded row/col positions designed for a 9×9 grid. It quietly breaks on Intermediate or Expert.
-
-**Notes:** Either clamp the positions to board bounds, regenerate a valid test layout per difficulty, or gate the test mode to Beginner only with a runtime warning.
-
----
 
 ## Flower Picking Mechanic
 
