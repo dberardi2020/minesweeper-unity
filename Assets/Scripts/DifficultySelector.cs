@@ -9,13 +9,13 @@ public class DifficultySelector : MonoBehaviour
 
     void Awake()
     {
-        _gm = FindFirstObjectByType<GameManager>();
+        _gm = FindAnyObjectByType<GameManager>();
         BuildUI();
     }
 
     void BuildUI()
     {
-        if (FindFirstObjectByType<EventSystem>() == null)
+        if (FindAnyObjectByType<EventSystem>() == null)
         {
             new GameObject("EventSystem")
                 .AddComponent<EventSystem>()
