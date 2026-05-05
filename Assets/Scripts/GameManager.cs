@@ -74,10 +74,14 @@ public class GameManager : MonoBehaviour
             -10f
         );
 
-        // Snap PPU to a multiple of 20 so the 0.05-unit tile gap maps to a whole pixel.
-        float rawSize    = gridHeight / 2f + 0.5f;
+        float aspect    = (float)cam.pixelWidth / cam.pixelHeight;
+        float rawSizeV  = gridHeight / 2f + 0.5f;
+        float rawSizeH  = _cols / (2f * aspect) + 0.5f;
+        float rawSize   = Mathf.Max(rawSizeV, rawSizeH);
+
+        // Floor (not Round) so PPU only snaps down — orthoSize never ends up smaller than required.
         float rawPpu     = cam.pixelHeight / (rawSize * 2f);
-        float snappedPpu = Mathf.Round(rawPpu / 20f) * 20f;
+        float snappedPpu = Mathf.Floor(rawPpu / 20f) * 20f;
         cam.orthographicSize = snappedPpu > 0
             ? cam.pixelHeight / (snappedPpu * 2f)
             : rawSize;
